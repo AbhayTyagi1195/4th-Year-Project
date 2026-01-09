@@ -252,7 +252,7 @@ The **Medical Image Analysis System** is a comprehensive full-stack application 
 
 #### 1. Clone the Repository
 ```bash
-git clone https://github.com/ayushchauhan7/Final-Year-Project.git
+git clone https://github.com/AbhayTyagi1195/4th-Year-Project.git
 cd Final-Year-Project/Medical_Image_Analysis_System
 ```
 
