@@ -1298,7 +1298,7 @@ If you encounter issues not listed here:
    - Model file present
 
 3. **Create Issue**:
-   - Visit [GitHub Issues](https://github.com/ayushchauhan7/Final-Year-Project/issues)
+   - Visit [GitHub Issues](https://github.com/AbhayTyagi1195/4th-Year-Project/issues)
    - Provide error messages
    - Include system details
    - Describe steps to reproduce
@@ -1469,9 +1469,9 @@ SOFTWARE.
 
 ### Project Information
 
-- 📁 **Repository**: [github.com/ayushchauhan7/Final-Year-Project](https://github.com/ayushchauhan7/Final-Year-Project)
-- 🐛 **Report Issues**: [GitHub Issues](https://github.com/ayushchauhan7/Final-Year-Project/issues)
-- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/ayushchauhan7/Final-Year-Project/discussions)
+- 📁 **Repository**: [github.com/AbhayTyagi1195/4th-Year-Project](https://github.com/AbhayTyagi1195/4th-Year-Project)
+- 🐛 **Report Issues**: [GitHub Issues](https://github.com/AbhayTyagi1195/4th-Year-Project/issues)
+- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/AbhayTyagi1195/4th-Year-Project/discussions)
 - 📖 **Documentation**: [README.md](README.md)
 - 🎥 **Demo Video**: [Coming Soon]
 
@@ -1709,9 +1709,9 @@ We would like to express our gratitude to:
 
 If you find this project helpful, please give it a star! ⭐
 
-[![GitHub stars](https://img.shields.io/github/stars/ayushchauhan7/Final-Year-Project?style=social)](https://github.com/ayushchauhan7/Final-Year-Project)
-[![GitHub forks](https://img.shields.io/github/forks/ayushchauhan7/Final-Year-Project?style=social)](https://github.com/ayushchauhan7/Final-Year-Project/fork)
-[![GitHub watchers](https://img.shields.io/github/watchers/ayushchauhan7/Final-Year-Project?style=social)](https://github.com/ayushchauhan7/Final-Year-Project)
+[![GitHub stars](https://img.shields.io/github/stars/AbhayTyagi1195/4th-Year-Project?style=social)](https://github.com/AbhayTyagi1195/4th-Year-Project)
+[![GitHub forks](https://img.shields.io/github/forks/AbhayTyagi1195/4th-Year-Project?style=social)](https://github.com/AbhayTyagi1195/4th-Year-Project/fork)
+[![GitHub watchers](https://img.shields.io/github/watchers/AbhayTyagi1195/4th-Year-Project?style=social)](https://github.com/AbhayTyagi1195/4th-Year-Project)
 
 ---
 
@@ -1730,9 +1730,9 @@ Follow us for updates and new projects!
 
 We'd love to hear from you!
 
-- 💡 **Suggestions**: [Open a discussion](https://github.com/ayushchauhan7/Final-Year-Project/discussions)
-- 🐛 **Bug Reports**: [Create an issue](https://github.com/ayushchauhan7/Final-Year-Project/issues)
-- ⭐ **Feature Requests**: [Start a discussion](https://github.com/ayushchauhan7/Final-Year-Project/discussions)
+- 💡 **Suggestions**: [Open a discussion](https://github.com/AbhayTyagi1195/4th-Year-Project/discussions)
+- 🐛 **Bug Reports**: [Create an issue](https://github.com/AbhayTyagi1195/4th-Year-Project/issues)
+- ⭐ **Feature Requests**: [Start a discussion](https://github.com/AbhayTyagi1195/4th-Year-Project/discussions)
 - 📧 **Email**: abhaytyagi957@gmail.com, chauhan0007ayush@gmail.com
 
 ---
