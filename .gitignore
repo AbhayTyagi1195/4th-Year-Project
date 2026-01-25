@@ -6,6 +6,9 @@ uploads/
 models/
 output/
 
+#Verification script
+backend/verify_mongodb.py
+
 # Python Virtual Environment
 venv/
 env/
