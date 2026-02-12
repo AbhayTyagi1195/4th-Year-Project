@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Detection System - Test Interface</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        #results img, #api-results img, #debug-results img {
+            max-height: 400px;
+            margin-top: 15px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .lead {
+            margin-bottom: 30px;
+        }
+
+        .api-section {
+            border-left: 4px solid #007bff;
+            padding-left: 15px;
+        }
+
+        .debug-section {
+            border-left: 4px solid #28a745;
+            padding-left: 15px;
+        }
+
+        .json-output {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .json-output pre {
+            margin: 0;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #d32f2f;
+            color: white;
+        }
+
+        #charts-display .card {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        #charts-display .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        #statistics-summary .card {
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        #charts-results, #statistics-results {
+            transition: all 0.3s ease;
+        }
+
+        .card-title {
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .json-output {
+                font-size: 10px;
+                max-height: 200px;
+            }
+            
+            #charts-display .card-body img {
+                max-height: 200px !important;
+            }
+        }
+
+        form {
+            position: relative;
+        }
+
+        form[onsubmit="return false;"] {
+            border-left: 3px solid #28a745;
+            padding-left: 10px;
+        }
+
+        button[type="button"] {
+            cursor: pointer;
+        }
+
+        .tab-content {
+            min-height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="text-center">
+            <h1 class="display-4 text-danger">🧠 Brain Tumor Detection System</h1>
+            <p class="lead text-secondary">Comprehensive test interface for Brain MRI Analysis</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="web-tab" data-bs-toggle="tab" data-bs-target="#web" type="button">Web Interface</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="api-tab" data-bs-toggle="tab" data-bs-target="#api" type="button">API Predict</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="debug-tab" data-bs-toggle="tab" data-bs-target="#debug" type="button">Debug API</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="batch-tab" data-bs-toggle="tab" data-bs-target="#batch" type="button">Batch API</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button">Research Results</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- Web Interface Tab -->
+            <div class="tab-pane fade show active" id="web" role="tabpanel">
+                <div class="card shadow p-4 mt-4" style="border-left: 4px solid #d32f2f;">
+                    <h4 class="text-danger">🧠 Brain Tumor Analysis</h4>
+                    <p class="text-muted">Upload an MRI scan image for AI-powered tumor detection</p>
+                    
+                    <form id="web-upload-form" onsubmit="return false;">
+                        <div class="mb-3">
+                            <label for="web-file" class="form-label">Select MRI Scan Image:</label>
+                            <input type="file" class="form-control" id="web-file" accept="image/*" required>
+                        </div>
+                        <button type="button" class="btn btn-danger" onclick="analyzeWebImage()">
+                            <span id="web-spinner" class="spinner-border spinner-border-sm d-none"></span>
+                            Analyze MRI Scan
+                        </button>
+                    </form>
+                </div>
+
+                <div id="web-results" class="mt-4" style="display: none;">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title text-danger">🎯 Analysis Results</h4>
+                            <div id="web-image-preview" class="mb-3"></div>
+                            <div id="web-json" class="json-output"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Predict Tab -->
+            <div class="tab-pane fade" id="api" role="tabpanel">
+                <div class="card shadow p-4 mt-4 api-section">
+                    <h4 class="text-primary">API Predict Endpoint</h4>
+                    <p class="text-muted">Test <code>/api/predict</code> endpoint with AJAX</p>
+                    <form id="api-form">
+                        <div class="mb-3">
+                            <label for="api-file" class="form-label">Select MRI Scan Image:</label>
+                            <input type="file" class="form-control" id="api-file" accept="image/*" required>
+                        </div>
+                        <button type="button" class="btn btn-info" onclick="testApiPredict()">
+                            <span id="api-spinner" class="spinner-border spinner-border-sm d-none"></span>
+                            Test API Predict
+                        </button>
+                    </form>
+                </div>
+
+                <div id="api-results" class="mt-4" style="display: none;">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title text-info">API Response</h4>
+                            <div id="api-json" class="json-output"></div>
+                            <div id="api-image-preview" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Debug API Tab -->
+            <div class="tab-pane fade" id="debug" role="tabpanel">
+                <div class="card shadow p-4 mt-4 debug-section">
+                    <h4 class="text-success">Debug Prediction Endpoint</h4>
+                    <p class="text-muted">Test <code>/api/debug/prediction</code> with detailed analysis</p>
+                    <form id="debug-form">
+                        <div class="mb-3">
+                            <label for="debug-file" class="form-label">Select MRI Scan Image:</label>
+                            <input type="file" class="form-control" id="debug-file" accept="image/*" required>
+                        </div>
+                        <button type="button" class="btn btn-success" onclick="testDebugPredict()">
+                            <span id="debug-spinner" class="spinner-border spinner-border-sm d-none"></span>
+                            Test Debug Prediction
+                        </button>
+                    </form>
+                </div>
+
+                <div id="debug-results" class="mt-4" style="display: none;">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title text-success">Debug Response</h4>
+                            <div id="debug-json" class="json-output"></div>
+                            <div id="debug-image-preview" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Batch API Tab -->
+            <div class="tab-pane fade" id="batch" role="tabpanel">
+                <div class="card shadow p-4 mt-4" style="border-left: 4px solid #fd7e14;">
+                    <h4 class="text-warning">📚 Batch Prediction Endpoint</h4>
+                    <p class="text-muted">Test <code>/api/predict/batch</code> endpoint with multiple MRI scans</p>
+                    <form id="batch-form">
+                        <div class="mb-3">
+                            <label for="batch-files" class="form-label">Select Multiple MRI Scan Images:</label>
+                            <input type="file" class="form-control" id="batch-files" accept="image/*" multiple required>
+                            <small class="text-muted">Hold Ctrl/Cmd to select multiple MRI images</small>
+                        </div>
+                        <button type="button" class="btn btn-warning" onclick="testBatchPredict()">
+                            <span id="batch-spinner" class="spinner-border spinner-border-sm d-none"></span>
+                            Test Batch Prediction
+                        </button>
+                    </form>
+                </div>
+
+                <div id="batch-results" class="mt-4" style="display: none;">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title text-warning">📊 Batch Response</h4>
+                            <div id="batch-summary" class="mb-3"></div>
+                            <div id="batch-detailed-results" class="mb-3"></div>
+                            <div class="mt-3">
+                                <h5>Raw JSON Response:</h5>
+                                <div id="batch-json" class="json-output"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Results Tab -->
+            <div class="tab-pane fade" id="results" role="tabpanel">
+                <div class="card shadow p-4 mt-4" style="border-left: 4px solid #28a745;">
+                    <h4 class="text-success">📊 Research Results & Analytics</h4>
+                    <p class="text-muted">Test research endpoints for charts and statistical analysis</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>📈 Charts Generation</h5>
+                            <p><code>/api/results/charts</code> - Generate research visualizations</p>
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-success" onclick="testChartsGeneration()">
+                                    <span id="charts-spinner" class="spinner-border spinner-border-sm d-none"></span>
+                                    Generate Research Charts
+                                </button>
+                                <button type="button" class="btn btn-outline-success btn-sm" onclick="refreshCharts()">
+                                    🔄 Refresh Charts
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>📊 Statistical Analysis</h5>
+                            <p><code>/api/results/statistics</code> - Get detailed statistics</p>
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-info" onclick="testStatisticsGeneration()">
+                                    <span id="stats-spinner" class="spinner-border spinner-border-sm d-none"></span>
+                                    Generate Statistics
+                                </button>
+                                <button type="button" class="btn btn-outline-info btn-sm" onclick="refreshStatistics()">
+                                    🔄 Refresh Statistics
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <strong>Note:</strong> Charts and statistics are preserved when switching tabs. Use refresh buttons to get updated data after making new predictions.
+                        </small>
+                    </div>
+                </div>
+
+                <div id="charts-results" class="mt-4" style="display: none;">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title text-success">📊 Generated Charts</h4>
+                            <div id="charts-display" class="row mb-4"></div>
+                            <div class="mt-3">
+                                <h5>Raw JSON Response:</h5>
+                                <div id="charts-json" class="json-output"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="statistics-results" class="mt-4" style="display: none;">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h4 class="card-title text-info">📈 Statistical Analysis</h4>
+                            <div id="statistics-json" class="json-output"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick API Info -->
+        <div class="card shadow p-4 mt-4">
+            <h5 class="text-secondary">🧠 Quick API Reference - Brain Tumor Endpoints</h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Standard Endpoints:</strong>
+                    <ul class="list-unstyled mt-2">
+                        <li><code>GET /api/health</code> - Health Check</li>
+                        <li><code>GET /api/classes</code> - Tumor Classes</li>
+                        <li><code>GET /api/model/info</code> - Model Info</li>
+                        <li><code>GET /api/analytics/summary</code> - Analytics</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <strong>POST Endpoints:</strong>
+                    <ul class="list-unstyled mt-2">
+                        <li><code>POST /api/predict</code> - Single MRI</li>
+                        <li><code>POST /api/predict/batch</code> - Multiple MRIs</li>
+                        <li><code>POST /api/debug/prediction</code> - Debug</li>
+                    </ul>
+                    <strong>Research Endpoints:</strong>
+                    <ul class="list-unstyled mt-2">
+                        <li><code>GET /api/results/charts</code> - Charts</li>
+                        <li><code>GET /api/results/statistics</code> - Stats</li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <strong>Test These Endpoints:</strong>
+                    <div class="d-grid gap-1">
+                        <button class="btn btn-sm btn-outline-primary" onclick="testEndpoint('/api/health')">Test Health</button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="testEndpoint('/api/classes')">Test Classes</button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="testEndpoint('/api/model/info')">Test Model Info</button>
+                        <button class="btn btn-sm btn-outline-info" onclick="testChartsQuick()">Generate Charts</button>
+                    </div>
+                </div>
+            </div>
+            <div id="quick-test-results" class="mt-3" style="display: none;">
+                <div class="json-output" id="quick-json"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variable declarations
+        let chartsGenerated = false;
+        let statisticsGenerated = false;
+        let savedChartsData = null;
+        let savedStatsData = null;
+
+        // Test API Predict endpoint
+        function testApiPredict() {
+            const fileInput = document.getElementById('api-file');
+            const spinner = document.getElementById('api-spinner');
+            const resultsDiv = document.getElementById('api-results');
+            const jsonDiv = document.getElementById('api-json');
+            const imageDiv = document.getElementById('api-image-preview');
+
+            if (!fileInput.files[0]) {
+                alert('Please select an MRI scan image first!');
+                return;
+            }
+
+            spinner.classList.remove('d-none');
+            
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            fetch('/api/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add('d-none');
+                resultsDiv.style.display = 'block';
+                jsonDiv.textContent = JSON.stringify(data, null, 2);
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageDiv.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" alt="Uploaded MRI" style="max-height: 300px;">`;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            })
+            .catch(error => {
+                spinner.classList.add('d-none');
+                jsonDiv.textContent = `Error: ${error.message}`;
+                resultsDiv.style.display = 'block';
+            });
+        }
+
+        // Test Debug Prediction endpoint
+        function testDebugPredict() {
+            const fileInput = document.getElementById('debug-file');
+            const spinner = document.getElementById('debug-spinner');
+            const resultsDiv = document.getElementById('debug-results');
+            const jsonDiv = document.getElementById('debug-json');
+            const imageDiv = document.getElementById('debug-image-preview');
+
+            if (!fileInput.files[0]) {
+                alert('Please select an MRI scan image first!');
+                return;
+            }
+
+            spinner.classList.remove('d-none');
+            
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            fetch('/api/debug/prediction', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add('d-none');
+                resultsDiv.style.display = 'block';
+                jsonDiv.textContent = JSON.stringify(data, null, 2);
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageDiv.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" alt="Uploaded MRI" style="max-height: 300px;">`;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            })
+            .catch(error => {
+                spinner.classList.add('d-none');
+                jsonDiv.textContent = `Error: ${error.message}`;
+                resultsDiv.style.display = 'block';
+            });
+        }
+
+        // Test Batch Prediction
+        function testBatchPredict() {
+            const fileInput = document.getElementById('batch-files');
+            const spinner = document.getElementById('batch-spinner');
+            const resultsDiv = document.getElementById('batch-results');
+            const jsonDiv = document.getElementById('batch-json');
+            const summaryDiv = document.getElementById('batch-summary');
+            const detailedDiv = document.getElementById('batch-detailed-results');
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Please select multiple MRI scan images first!');
+                return;
+            }
+
+            spinner.classList.remove('d-none');
+            resultsDiv.style.display = 'none';
+            jsonDiv.textContent = '';
+            summaryDiv.innerHTML = '';
+            detailedDiv.innerHTML = '';
+            
+            const formData = new FormData();
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append('images', fileInput.files[i]);
+            }
+
+            fetch('/api/predict/batch', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add('d-none');
+                resultsDiv.style.display = 'block';
+                jsonDiv.textContent = JSON.stringify(data, null, 2);
+                displayBatchSummary(data, summaryDiv);
+                displayBatchDetailedResults(data, fileInput.files, detailedDiv);
+            })
+            .catch(error => {
+                spinner.classList.add('d-none');
+                jsonDiv.textContent = `Error: ${error.message}`;
+                resultsDiv.style.display = 'block';
+                summaryDiv.innerHTML = `<div class="alert alert-danger"><h6>❌ Error processing MRI scans</h6><p>${error.message}</p></div>`;
+            });
+        }
+
+        // Display batch summary
+        function displayBatchSummary(data, summaryDiv) {
+            const summary = data.batch_summary || {};
+            
+            let summaryHtml = `
+                <div class="row mb-3 p-3 bg-light rounded">
+                    <div class="col-12"><h5>📈 Batch Summary</h5></div>
+                    <div class="col-md-4 text-center">
+                        <div class="alert alert-info p-2 mb-2">
+                            <strong class="d-block" style="font-size: 1.5rem;">${data.total_images || 0}</strong>
+                            <small>Total MRI Scans</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="alert alert-danger p-2 mb-2">
+                            <strong class="d-block" style="font-size: 1.5rem;">${summary.tumor_detected || 0}</strong>
+                            <small>Tumors Detected</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="alert alert-success p-2 mb-2">
+                            <strong class="d-block" style="font-size: 1.5rem;">${summary.no_tumor || 0}</strong>
+                            <small>Normal Scans</small>
+                        </div>
+                    </div>
+            `;
+            
+            if (summary.by_tumor_type && Object.keys(summary.by_tumor_type).length > 0) {
+                summaryHtml += `<div class="col-12 mt-2"><small class="text-muted">Tumor Type Distribution:</small><div class="row mt-2">`;
+                Object.entries(summary.by_tumor_type).forEach(([type, count]) => {
+                    summaryHtml += `<div class="col-6 col-md-3 mb-2"><div class="text-center p-2 border rounded"><strong>${count}</strong><br/><small>${type}</small></div></div>`;
+                });
+                summaryHtml += `</div></div>`;
+            }
+            
+            summaryHtml += `</div>`;
+            summaryDiv.innerHTML = summaryHtml;
+        }
+
+        // Display detailed batch results
+        function displayBatchDetailedResults(data, files, detailedDiv) {
+            if (!data.results || data.results.length === 0) {
+                detailedDiv.innerHTML = '<p>No detailed results available.</p>';
+                return;
+            }
+            
+            let detailedHtml = '<h5>📋 Detailed Analysis:</h5><div class="row">';
+            
+            data.results.forEach((result, index) => {
+                const confidence = result.confidence_percentage || (parseFloat(result.confidence_score) * 100);
+                const tumorInfo = getTumorInformation(result.prediction, confidence);
+                
+                detailedHtml += `
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-${tumorInfo.color}">
+                            <div class="card-header bg-${tumorInfo.color} text-white">
+                                <strong>${tumorInfo.icon} ${tumorInfo.name}</strong>
+                                <span class="badge bg-light text-dark float-end">${tumorInfo.severity}</span>
+                            </div>
+                            <div class="card-body p-2">
+                                <p class="mb-2"><small><strong>📄 File:</strong> ${result.filename}</small></p>
+                                <div class="alert alert-light border p-2 mb-2">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small class="text-muted">Confidence</small><br>
+                                            <strong class="text-${tumorInfo.color}">${typeof confidence === 'number' ? confidence.toFixed(1) : confidence}%</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Level</small><br>
+                                            <strong>${tumorInfo.confidenceLevel}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p style="font-size: 0.85rem;" class="mb-2">${tumorInfo.description}</p>
+                                <details class="mb-2">
+                                    <summary style="cursor: pointer; padding: 0.5rem; background: #f8f9fa; border-radius: 0.25rem;">
+                                        <strong>📋 Medical Information</strong>
+                                    </summary>
+                                    <ul class="mt-2 mb-0" style="font-size: 0.75rem; padding-left: 1.5rem;">
+                                        ${tumorInfo.details.map(detail => `<li>${detail}</li>`).join('')}
+                                    </ul>
+                                </details>
+                                <details>
+                                    <summary style="cursor: pointer; padding: 0.5rem; background: #f8f9fa; border-radius: 0.25rem;">
+                                        <strong>💡 Recommendations</strong>
+                                    </summary>
+                                    <ol class="mt-2 mb-0" style="font-size: 0.75rem; padding-left: 1.5rem;">
+                                        ${tumorInfo.recommendations.slice(0, 3).map(rec => `<li>${rec}</li>`).join('')}
+                                    </ol>
+                                </details>
+                                <div class="mt-2">
+                                    ${tumorInfo.color !== 'success' ? 
+                                        '<span class="badge bg-danger" style="font-size: 0.7rem;">🏥 Requires Medical Attention</span>' :
+                                        '<span class="badge bg-success" style="font-size: 0.7rem;">✅ Normal Scan</span>'
+                                    }
+                                    <span class="badge bg-${tumorInfo.color}" style="font-size: 0.7rem;">${tumorInfo.confidenceLevel}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            detailedHtml += '</div>';
+            detailedHtml += `<div class="alert alert-warning mt-3"><strong>⚠️ Disclaimer:</strong> AI-generated results. Professional radiologist review required for clinical diagnosis.</div>`;
+            detailedDiv.innerHTML = detailedHtml;
+        }
+
+        // Test other endpoints
+        function testEndpoint(endpoint) {
+            const resultsDiv = document.getElementById('quick-test-results');
+            const jsonDiv = document.getElementById('quick-json');
+
+            const existingCharts = resultsDiv.querySelector('.mt-4');
+            if (existingCharts) existingCharts.remove();
+
+            fetch(endpoint)
+            .then(response => response.json())
+            .then(data => {
+                resultsDiv.style.display = 'block';
+                jsonDiv.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                resultsDiv.style.display = 'block';
+                jsonDiv.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        // Test charts quick
+        function testChartsQuick() {
+            const resultsDiv = document.getElementById('quick-test-results');
+            const jsonDiv = document.getElementById('quick-json');
+
+            resultsDiv.style.display = 'block';
+            jsonDiv.innerHTML = '<div class="text-center"><div class="spinner-border text-info"></div><p>Generating charts...</p></div>';
+
+            fetch('/api/results/charts')
+            .then(response => response.json())
+            .then(data => {
+                jsonDiv.textContent = JSON.stringify(data, null, 2);
+                
+                if (data.charts && Object.keys(data.charts).length > 0) {
+                    let chartsHtml = '<div class="mt-4"><h6>Generated Charts:</h6><div class="row">';
+                    Object.entries(data.charts).forEach(([chartName, chartBase64]) => {
+                        const chartTitle = chartName.replace(/_/g, ' ').toUpperCase();
+                        chartsHtml += `
+                            <div class="col-md-6 col-sm-12 mb-3">
+                                <div class="card">
+                                    <div class="card-header bg-info text-white"><small>${chartTitle}</small></div>
+                                    <div class="card-body text-center p-2">
+                                        <img src="data:image/png;base64,${chartBase64}" class="img-fluid" alt="${chartTitle}" style="max-height: 200px; cursor: pointer;" onclick="openImageModal('${chartBase64}', '${chartTitle}')">
+                                        <br><small class="text-muted">Click to enlarge</small>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    chartsHtml += '</div></div>';
+                    jsonDiv.insertAdjacentHTML('afterend', chartsHtml);
+                }
+            })
+            .catch(error => {
+                resultsDiv.style.display = 'block';
+                jsonDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${error.message}</div><pre>Unable to generate charts. Make predictions first.</pre>`;
+            });
+        }
+
+        // Test Charts Generation
+        function testChartsGeneration() {
+            const spinner = document.getElementById('charts-spinner');
+            const resultsDiv = document.getElementById('charts-results');
+            const chartsDisplay = document.getElementById('charts-display');
+            const jsonDiv = document.getElementById('charts-json');
+
+            if (chartsGenerated && savedChartsData) {
+                displaySavedCharts(savedChartsData);
+                return;
+            }
+
+            spinner.classList.remove('d-none');
+            resultsDiv.style.display = 'none';
+            chartsDisplay.innerHTML = '';
+            jsonDiv.textContent = '';
+
+            fetch('/api/results/charts')
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add('d-none');
+                savedChartsData = data;
+                chartsGenerated = true;
+                displaySavedCharts(data);
+            })
+            .catch(error => {
+                spinner.classList.add('d-none');
+                resultsDiv.style.display = 'block';
+                jsonDiv.textContent = `Error: ${error.message}`;
+                chartsDisplay.innerHTML = `<div class="col-12"><div class="alert alert-danger"><strong>Error generating charts:</strong> ${error.message}</div></div>`;
+            });
+        }
+
+        // Display saved charts
+        function displaySavedCharts(data) {
+            const resultsDiv = document.getElementById('charts-results');
+            const chartsDisplay = document.getElementById('charts-display');
+            const jsonDiv = document.getElementById('charts-json');
+            
+            resultsDiv.style.display = 'block';
+            jsonDiv.textContent = JSON.stringify(data, null, 2);
+            
+            if (data.charts && Object.keys(data.charts).length > 0) {
+                let chartsHtml = '';
+                Object.entries(data.charts).forEach(([chartName, chartBase64]) => {
+                    const chartTitle = chartName.replace(/_/g, ' ').toUpperCase();
+                    chartsHtml += `
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header bg-success text-white"><h6 class="mb-0">${chartTitle}</h6></div>
+                                <div class="card-body text-center">
+                                    <img src="data:image/png;base64,${chartBase64}" class="img-fluid" alt="${chartTitle}" style="max-height: 300px; cursor: pointer;" onclick="openImageModal('${chartBase64}', '${chartTitle}')">
+                                    <br><small class="text-muted">Click to enlarge</small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                chartsDisplay.innerHTML = chartsHtml;
+            } else {
+                chartsDisplay.innerHTML = `<div class="col-12"><div class="alert alert-warning">No charts available. Make predictions first.</div></div>`;
+            }
+        }
+
+        // Test Statistics Generation
+        function testStatisticsGeneration() {
+            const spinner = document.getElementById('stats-spinner');
+            const resultsDiv = document.getElementById('statistics-results');
+            const jsonDiv = document.getElementById('statistics-json');
+
+            if (statisticsGenerated && savedStatsData) {
+                displaySavedStatistics(savedStatsData);
+                return;
+            }
+
+            spinner.classList.remove('d-none');
+            resultsDiv.style.display = 'none';
+            jsonDiv.textContent = '';
+
+            fetch('/api/results/statistics')
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add('d-none');
+                savedStatsData = data;
+                statisticsGenerated = true;
+                displaySavedStatistics(data);
+            })
+            .catch(error => {
+                spinner.classList.add('d-none');
+                resultsDiv.style.display = 'block';
+                jsonDiv.textContent = `Error: ${error.message}`;
+            });
+        }
+
+        // Display saved statistics
+        function displaySavedStatistics(data) {
+            const resultsDiv = document.getElementById('statistics-results');
+            const jsonDiv = document.getElementById('statistics-json');
+            
+            resultsDiv.style.display = 'block';
+            jsonDiv.textContent = JSON.stringify(data, null, 2);
+        }
+
+        // Tab switching event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('[data-bs-toggle="tab"]').forEach(function(tab) {
+                tab.addEventListener('shown.bs.tab', function(e) {
+                    if (e.target.getAttribute('data-bs-target') === '#results') {
+                        setTimeout(() => {
+                            if (chartsGenerated && savedChartsData) displaySavedCharts(savedChartsData);
+                            if (statisticsGenerated && savedStatsData) displaySavedStatistics(savedStatsData);
+                        }, 100);
+                    }
+                });
+            });
+        });
+
+        // Refresh buttons
+        function refreshCharts() {
+            chartsGenerated = false;
+            savedChartsData = null;
+            testChartsGeneration();
+        }
+
+        function refreshStatistics() {
+            statisticsGenerated = false;
+            savedStatsData = null;
+            testStatisticsGeneration();
+        }
+
+        // Image modal
+        function openImageModal(base64Data, title) {
+            const modalHtml = `
+                <div class="modal fade" id="chartModal" tabindex="-1">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">${title}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <img src="data:image/png;base64,${base64Data}" class="img-fluid" alt="${title}">
+                            </div>
+                            <div class="modal-footer">
+                                <a href="data:image/png;base64,${base64Data}" download="${title}.png" class="btn btn-success">Download Chart</a>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const existingModal = document.getElementById('chartModal');
+            if (existingModal) existingModal.remove();
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            const modal = new bootstrap.Modal(document.getElementById('chartModal'));
+            modal.show();
+        }
+
+        // Get tumor information
+        function getTumorInformation(prediction, confidence) {
+            const confidenceValue = parseFloat(confidence);
+            
+            const tumorDescriptions = {
+                'glioma': {
+                    name: 'Glioma Tumor',
+                    description: 'Gliomas are tumors that originate from glial cells in the brain or spine. They are the most common type of primary brain tumors.',
+                    severity: 'High Risk',
+                    color: 'danger',
+                    icon: '⚠️',
+                    details: [
+                        'Most common primary brain tumor in adults',
+                        'Can be slow-growing (low-grade) or fast-growing (high-grade)',
+                        'May cause headaches, seizures, and neurological symptoms',
+                        'Treatment options include surgery, radiation, and chemotherapy'
+                    ]
+                },
+                'meningioma': {
+                    name: 'Meningioma Tumor',
+                    description: 'Meningiomas develop from the meninges (protective membranes covering the brain and spinal cord). Most are benign and slow-growing.',
+                    severity: 'Moderate Risk',
+                    color: 'warning',
+                    icon: '⚡',
+                    details: [
+                        'Usually benign (non-cancerous) and slow-growing',
+                        'More common in women than men',
+                        'May not require immediate treatment if small',
+                        'Symptoms depend on tumor location and size',
+                        'Treatment includes observation, surgery, or radiation'
+                    ]
+                },
+                'pituitary': {
+                    name: 'Pituitary Tumor',
+                    description: 'Pituitary tumors form in the pituitary gland at the base of the brain. Most are benign adenomas that can affect hormone production.',
+                    severity: 'Moderate Risk',
+                    color: 'info',
+                    icon: '🔬',
+                    details: [
+                        'Usually benign (non-cancerous)',
+                        'Can affect hormone levels and bodily functions',
+                        'May cause vision problems if pressing on optic nerves',
+                        'Symptoms include headaches, fatigue, and hormonal changes',
+                        'Treatment includes medication, surgery, or radiation'
+                    ]
+                },
+                'notumor': {
+                    name: 'No Tumor Detected',
+                    description: 'The AI analysis indicates no signs of tumor in the MRI scan. The brain tissue appears normal.',
+                    severity: 'Low Risk',
+                    color: 'success',
+                    icon: '✅',
+                    details: [
+                        'No abnormal growth detected',
+                        'Brain tissue appears within normal parameters',
+                        'Continue regular health monitoring',
+                        'Consult healthcare provider for any symptoms'
+                    ]
+                }
+            };
+            
+            let tumorType = 'notumor';
+            if (prediction.toLowerCase().includes('glioma')) {
+                tumorType = 'glioma';
+            } else if (prediction.toLowerCase().includes('meningioma')) {
+                tumorType = 'meningioma';
+            } else if (prediction.toLowerCase().includes('pituitary')) {
+                tumorType = 'pituitary';
+            }
+            
+            const info = tumorDescriptions[tumorType];
+            
+            let confidenceLevel = '';
+            let recommendations = [];
+            
+            if (confidenceValue >= 90) {
+                confidenceLevel = 'Very High Confidence';
+                if (tumorType !== 'notumor') {
+                    recommendations = [
+                        '🏥 <strong>Immediate Action Required:</strong> Schedule urgent consultation with a neurologist or neurosurgeon',
+                        '📋 Bring complete medical history and all previous scans to the appointment',
+                        '🔬 Additional diagnostic tests (biopsy, advanced imaging) may be recommended',
+                        '👨‍⚕️ Seek second opinion from specialized brain tumor center',
+                        '📱 Do not delay - early intervention improves treatment outcomes'
+                    ];
+                } else {
+                    recommendations = [
+                        '✅ <strong>No Immediate Concerns:</strong> Results indicate healthy brain tissue',
+                        '📅 Continue routine health check-ups as per your doctor\'s schedule',
+                        '🧠 Maintain brain health through proper diet, exercise, and sleep',
+                        '⚠️ Monitor for any new symptoms (headaches, vision changes, seizures)',
+                        '📞 Contact healthcare provider if any concerns arise'
+                    ];
+                }
+            } else if (confidenceValue >= 70) {
+                confidenceLevel = 'High Confidence';
+                if (tumorType !== 'notumor') {
+                    recommendations = [
+                        '🏥 <strong>Medical Consultation Strongly Advised:</strong> See a neurologist within 1-2 weeks',
+                        '📋 Request additional MRI sequences or CT scan for confirmation',
+                        '🔬 Prepare questions about treatment options and next steps',
+                        '📊 Compare with previous scans if available',
+                        '👨‍⚕️ Consider consultation at specialized center'
+                    ];
+                } else {
+                    recommendations = [
+                        '✅ <strong>Likely Normal:</strong> Results suggest healthy brain tissue',
+                        '📅 Discuss results with your primary care physician',
+                        '🔍 Additional imaging may be recommended if symptoms persist',
+                        '📝 Keep record of this scan for future reference',
+                        '⚠️ Report any new or worsening symptoms immediately'
+                    ];
+                }
+            } else if (confidenceValue >= 50) {
+                confidenceLevel = 'Moderate Confidence';
+                recommendations = [
+                    '🔍 <strong>Further Investigation Needed:</strong> Results are inconclusive',
+                    '📋 Additional imaging with different MRI sequences recommended',
+                    '👨‍⚕️ Consultation with radiologist and neurologist advised',
+                    '🔬 Consider advanced imaging (fMRI, PET scan) if symptoms present',
+                    '📊 Clinical correlation with symptoms is essential',
+                    '⏰ Do not ignore symptoms - seek medical evaluation'
+                ];
+            } else {
+                confidenceLevel = 'Low Confidence';
+                recommendations = [
+                    '⚠️ <strong>Uncertain Results:</strong> AI analysis has low confidence',
+                    '🔄 Repeat MRI scan with optimal imaging parameters',
+                    '📋 Image quality may need improvement for accurate diagnosis',
+                    '👨‍⚕️ Professional radiologist review is essential',
+                    '🔬 Consider alternative imaging modalities',
+                    '📞 Consult healthcare provider regardless of AI results'
+                ];
+            }
+            
+            return {
+                ...info,
+                confidenceLevel,
+                confidenceValue,
+                recommendations
+            };
+        }
+
+        // Web Interface Analysis
+        function analyzeWebImage() {
+            const fileInput = document.getElementById('web-file');
+            const spinner = document.getElementById('web-spinner');
+            const resultsDiv = document.getElementById('web-results');
+            const jsonDiv = document.getElementById('web-json');
+            const imageDiv = document.getElementById('web-image-preview');
+
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert('Please select an MRI scan image first!');
+                return;
+            }
+
+            spinner.classList.remove('d-none');
+            resultsDiv.style.display = 'none';
+            jsonDiv.textContent = '';
+            imageDiv.innerHTML = '';
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            fetch('/api/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                spinner.classList.add('d-none');
+                resultsDiv.style.display = 'block';
+                jsonDiv.textContent = JSON.stringify(data, null, 2);
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const prediction = data.prediction || 'Unknown';
+                    let confidence = data.confidence || data.confidence_percentage;
+                    let confidenceDisplay = 'N/A';
+                    let confidencePercent = 0;
+                    
+                    if (confidence !== undefined && confidence !== null && !isNaN(confidence)) {
+                        if (data.confidence_percentage) {
+                            confidencePercent = parseFloat(data.confidence_percentage);
+                            confidenceDisplay = confidencePercent.toFixed(1) + '%';
+                        } else if (confidence <= 1) {
+                            confidencePercent = confidence * 100;
+                            confidenceDisplay = confidencePercent.toFixed(1) + '%';
+                        } else {
+                            confidencePercent = parseFloat(confidence);
+                            confidenceDisplay = confidencePercent.toFixed(1) + '%';
+                        }
+                    }
+                    
+                    const tumorInfo = getTumorInformation(prediction, confidencePercent);
+                    
+                    imageDiv.innerHTML = `
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        <small><strong>📸 MRI Scan Image</strong></small>
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <img src="${e.target.result}" class="img-fluid rounded" alt="Uploaded MRI Scan" style="width: 100%; height: 300px; object-fit: contain; background: #f8f9fa;">
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                <strong>File:</strong> ${fileInput.files[0].name}<br>
+                                                <strong>Size:</strong> ${(fileInput.files[0].size / 1024).toFixed(1)} KB
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-7">
+                                <div class="card border-${tumorInfo.color} mb-3">
+                                    <div class="card-header bg-${tumorInfo.color} text-white">
+                                        <strong>${tumorInfo.icon} Analysis Result</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="text-${tumorInfo.color} mb-2">${tumorInfo.name}</h4>
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <div class="alert alert-light border mb-0 p-2">
+                                                    <small class="text-muted d-block">Confidence Level</small>
+                                                    <strong class="text-${tumorInfo.color}">${confidenceDisplay}</strong>
+                                                    <br><small class="text-muted">${tumorInfo.confidenceLevel}</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="alert alert-light border mb-0 p-2">
+                                                    <small class="text-muted d-block">Severity</small>
+                                                    <strong class="text-${tumorInfo.color}">${tumorInfo.severity}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="mb-0"><small>${tumorInfo.description}</small></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mb-3">
+                                    <div class="card-header bg-info text-white">
+                                        <strong>📋 Medical Information</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="mb-0" style="font-size: 0.85rem;">
+                                            ${tumorInfo.details.map(detail => `<li>${detail}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="card border-${tumorInfo.color}">
+                                    <div class="card-header bg-${tumorInfo.color} text-white">
+                                        <strong>💡 Recommendations</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <ol class="mb-0" style="font-size: 0.85rem; padding-left: 1.2rem;">
+                                            ${tumorInfo.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning mt-3 mb-0">
+                            <strong>⚠️ Important Disclaimer:</strong> This AI analysis is a screening tool and NOT a definitive diagnosis. 
+                            Always consult qualified healthcare professionals for proper medical evaluation and treatment decisions.
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            })
+            .catch(error => {
+                spinner.classList.add('d-none');
+                resultsDiv.style.display = 'block';
+                jsonDiv.textContent = `Error: ${error.message}`;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageDiv.innerHTML = `
+                        <div class="text-center">
+                            <img src="${e.target.result}" class="img-fluid rounded border" alt="Uploaded Image" style="max-height: 200px;">
+                            <div class="alert alert-danger mt-3">
+                                <strong>❌ Analysis Failed:</strong> ${error.message}
+                                <br><small>Please check image quality and try again</small>
+                            </div>
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            });
+        }
+    </script>
+</body>
+</html>
