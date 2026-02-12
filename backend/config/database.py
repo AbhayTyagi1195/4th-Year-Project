@@ -37,7 +37,7 @@ class Database:
             # Test connection
             self._client.admin.command('ping')
             
-            db_name = os.getenv('MONGODB_DB_NAME', 'brain_tumor_db')
+            db_name = os.getenv('MONGODB_DB_NAME', 'medical_image_analysis_db')
             self._db = self._client[db_name]
             
             print(f"✅ Successfully connected to MongoDB Atlas: {db_name}")
@@ -60,22 +60,40 @@ class Database:
             # Users collection indexes
             self._db.users.create_index("username", unique=True)
             self._db.users.create_index("email", unique=True)
+
+            # Brain Tumor predictions collection indexes
+            self._db.brain_tumor_predictions.create_index("userId")
+            self._db.brain_tumor_predictions.create_index("username")
+            self._db.brain_tumor_predictions.create_index("createdAt")
+            self._db.brain_tumor_predictions.create_index([("userId", 1), ("createdAt", -1)])
             
-            # Predictions collection indexes
-            self._db.predictions.create_index("userId")
-            self._db.predictions.create_index("username")
-            self._db.predictions.create_index("createdAt")
-            self._db.predictions.create_index([("userId", 1), ("createdAt", -1)])
+            # COVID-19 predictions collection indexes
+            self._db.covid_19_predictions.create_index("userId")
+            self._db.covid_19_predictions.create_index("username")
+            self._db.covid_19_predictions.create_index("createdAt")
+            self._db.covid_19_predictions.create_index([("userId", 1), ("createdAt", -1)])
             
-            # Batch results indexes
-            self._db.batch_results.create_index("batchId")
-            self._db.batch_results.create_index("userId")
+            # Brain Tumor batch results indexes
+            self._db.brain_tumor_batch_results.create_index("batchId")
+            self._db.brain_tumor_batch_results.create_index("userId")
+            
+            # COVID-19 batch results indexes
+            self._db.covid_19_batch_results.create_index("batchId")
+            self._db.covid_19_batch_results.create_index("userId")
             
             # Audit logs indexes
             self._db.audit_logs.create_index("userId")
             self._db.audit_logs.create_index("timestamp")
+            self._db.audit_logs.create_index("action")
             
             print("✅ Database indexes created successfully")
+            print("   📊 Collections configured:")
+            print("      - users (common)")
+            print("      - brain_tumor_predictions")
+            print("      - brain_tumor_batch_results")
+            print("      - covid_19_predictions")
+            print("      - covid_19_batch_results")
+            print("      - audit_logs (common)")
             
         except Exception as e:
             print(f"⚠️ Error creating indexes: {e}")
