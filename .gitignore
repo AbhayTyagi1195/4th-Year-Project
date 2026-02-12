@@ -5,9 +5,15 @@ trained_models
 uploads/
 models/
 output/
+frontend/*_old.py
+frontend/*_old.js
+frontend/*_old.jsx
+*_old.py
+*_old.js
+*_old.html
+*_old.css
+*_old.jsx
 
-#Verification script
-backend/verify_mongodb.py
 
 # Python Virtual Environment
 venv/
