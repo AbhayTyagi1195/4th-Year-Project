@@ -222,6 +222,158 @@ def logout():
                 pass
         
         return jsonify({'message': 'Logout successful'}), 200
-        
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+    # ...existing code...
+
+@auth_bp.route('/profile/update', methods=['PUT'])
+def update_profile():
+    """Update user profile (email, fullName, password)"""
+    from utils.auth import token_required
+    
+    @token_required
+    def _update():
+        try:
+            data = request.get_json()
+            user_id = ObjectId(request.current_user['user_id'])
+            
+            db = get_database()
+            user = db.users.find_one({'_id': user_id})
+            
+            if not user:
+                return jsonify({'error': 'User not found'}), 404
+            
+            update_data = {}
+            
+            # Update fullName if provided
+            if 'fullName' in data and data['fullName']:
+                full_name = data['fullName'].strip()
+                if len(full_name) < 2:
+                    return jsonify({'error': 'Full name must be at least 2 characters'}), 400
+                update_data['fullName'] = full_name
+            
+            # Update email if provided
+            if 'email' in data and data['email']:
+                new_email = data['email'].strip().lower()
+                
+                if not EMAIL_REGEX.match(new_email):
+                    return jsonify({'error': 'Invalid email format'}), 400
+                
+                if new_email != user['email']:
+                    if db.users.find_one({'email': new_email}):
+                        return jsonify({'error': 'Email already registered'}), 409
+                
+                update_data['email'] = new_email
+            
+            # Update password if provided
+            if 'oldPassword' in data and 'newPassword' in data:
+                old_password = data['oldPassword']
+                new_password = data['newPassword']
+                
+                if not verify_password(old_password, user['password']):
+                    return jsonify({'error': 'Current password is incorrect'}), 401
+                
+                if len(new_password) < 6:
+                    return jsonify({'error': 'Password must be at least 6 characters'}), 400
+                
+                update_data['password'] = hash_password(new_password)
+            
+            if not update_data:
+                return jsonify({'error': 'No fields to update'}), 400
+            
+            update_data['updatedAt'] = datetime.utcnow()
+            
+            result = db.users.update_one(
+                {'_id': user_id},
+                {'$set': update_data}
+            )
+            
+            db.audit_logs.insert_one({
+                'userId': user_id,
+                'username': user['username'],
+                'action': 'profile_update',
+                'ipAddress': request.remote_addr,
+                'userAgent': request.headers.get('User-Agent'),
+                'timestamp': datetime.utcnow(),
+                'details': {'fieldsUpdated': list(update_data.keys())}
+            })
+            
+            updated_user = db.users.find_one({'_id': user_id})
+            
+            return jsonify({
+                'message': 'Profile updated successfully',
+                'user': {
+                    'id': str(updated_user['_id']),
+                    'username': updated_user['username'],
+                    'email': updated_user['email'],
+                    'fullName': updated_user['fullName'],
+                    'role': updated_user.get('role', 'user')
+                }
+            }), 200
+            
+        except Exception as e:
+            print(f"Profile update error: {e}")
+            return jsonify({'error': 'Failed to update profile'}), 500
+    
+    return _update()
+
+
+@auth_bp.route('/account/delete', methods=['DELETE'])
+def delete_account():
+    """Delete user account and all associated data"""
+    from utils.auth import token_required
+    
+    @token_required
+    def _delete():
+        try:
+            data = request.get_json() or {}
+            user_id = ObjectId(request.current_user['user_id'])
+            
+            db = get_database()
+            user = db.users.find_one({'_id': user_id})
+            
+            if not user:
+                return jsonify({'error': 'User not found'}), 404
+            
+            if 'password' not in data:
+                return jsonify({'error': 'Password required to delete account'}), 400
+            
+            password = data['password']
+            
+            if not verify_password(password, user['password']):
+                return jsonify({'error': 'Invalid password. Account deletion cancelled.'}), 401
+            
+            username = user['username']
+            
+            db.audit_logs.insert_one({
+                'userId': user_id,
+                'username': username,
+                'action': 'account_deleted',
+                'ipAddress': request.remote_addr,
+                'userAgent': request.headers.get('User-Agent'),
+                'timestamp': datetime.utcnow(),
+                'details': {
+                    'email': user['email'],
+                    'fullName': user['fullName']
+                }
+            })
+            
+            db.predictions.delete_many({'userId': user_id})
+            db.batch_results.delete_many({'userId': user_id})
+            db.users.delete_one({'_id': user_id})
+            
+            return jsonify({
+                'message': 'Account deleted successfully. All associated data has been removed.',
+                'deletedData': {
+                    'username': username,
+                    'email': user['email'],
+                    'deletionTime': datetime.utcnow().isoformat()
+                }
+            }), 200
+            
+        except Exception as e:
+            print(f"Account deletion error: {e}")
+            return jsonify({'error': 'Failed to delete account'}), 500
+    
+    return _delete()
