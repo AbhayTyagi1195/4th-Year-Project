@@ -533,6 +533,240 @@ function App() {
     }
   };
 
+  // ADD THESE TWO FUNCTIONS HERE (AFTER LINE 699)
+  
+  // Download single prediction report
+  const downloadSingleReport = async () => {
+    if (!apiResponse || !result) {
+      alert('No analysis result available to download');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+
+      // ✅ FIX: Extract just the filename and let backend resolve it
+    let imagePath = result.image_path || result.filename || selectedFile?.name;
+    
+    // If it's an absolute path, extract just the filename
+    if (imagePath && imagePath.includes('\\')) {
+      imagePath = imagePath.split('\\').pop();
+    }
+    if (imagePath && imagePath.includes('/')) {
+      imagePath = imagePath.split('/').pop();
+    }
+      console.log('📤 Sending image filename to backend:', imagePath);
+      
+      const response = await fetch(`${API_BASE_URL}/api/predict/report`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          username: user.username,
+          prediction: result.prediction,
+          confidence: result.confidence_percentage || (result.confidence * 100),
+          image_path: imagePath
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate report');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `medical_report_${user.username}_${Date.now()}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      alert('✅ Report downloaded successfully!');
+    } catch (error) {
+      console.error('Error downloading report:', error);
+      alert('❌ Failed to download report. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Download batch analysis report
+  const downloadBatchReport = async () => {
+    if (!batchResults || !batchResults.results) {
+      alert('No batch results available to download');
+      return;
+    }
+
+    try {
+      setBatchLoading(true);
+      const token = localStorage.getItem('token');
+
+      
+      const formattedResults = batchResults.results.map(result => {
+        let imagePath = result.image_path || result.filename;
+        
+        // If it's an absolute path, extract just the filename
+        if (imagePath && imagePath.includes('\\')) {
+          imagePath = imagePath.split('\\').pop();
+        }
+        if (imagePath && imagePath.includes('/')) {
+          imagePath = imagePath.split('/').pop();
+        }
+
+        return {
+          filename: result.filename,  // ✅ ADD: Send filename separately
+          prediction: result.prediction,
+          confidence: result.confidence_percentage || (result.confidence_score * 100),
+        image_path: imagePath
+        };
+      });
+
+      console.log('📤 Sending to backend:', formattedResults);  // Debug log
+      
+      const response = await fetch(`${API_BASE_URL}/api/batch/report`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          username: user.username,
+          results: formattedResults
+        })
+      });
+
+       if (!response.ok) {
+        throw new Error('Failed to generate batch report');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `batch_report_${user.username}_${Date.now()}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      alert('✅ Batch report downloaded successfully!');
+    } catch (error) {
+      console.error('Error downloading batch report:', error);
+      alert('❌ Failed to download batch report. Please try again.');
+    } finally {
+      setBatchLoading(false);
+    }
+  };
+
+  // ADD THESE TWO FUNCTIONS AFTER downloadBatchReport():
+
+// Update Profile Function
+const handleUpdateProfile = async (e) => {
+  e.preventDefault();
+  setError(null);
+  setProfileLoading(true);
+
+  const updateData = {
+    fullName: profileForm.fullName,
+    email: profileForm.email
+  };
+
+  if (profileForm.newPassword) {
+    if (profileForm.newPassword !== profileForm.confirmPassword) {
+      setError('New passwords do not match');
+      setProfileLoading(false);
+      return;
+    }
+    if (profileForm.newPassword.length < 6) {
+      setError('Password must be at least 6 characters');
+      setProfileLoading(false);
+      return;
+    }
+    updateData.oldPassword = profileForm.oldPassword;
+    updateData.newPassword = profileForm.newPassword;
+  }
+
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_BASE_URL}/api/auth/profile/update`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(updateData)
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert('✅ Profile updated successfully!');
+      
+      const updatedUser = { ...user, ...data.user };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+      
+      setProfileForm({
+        ...profileForm,
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      });
+    } else {
+      setError(data.error || 'Profile update failed');
+    }
+  } catch (err) {
+    setError('Connection error. Please try again.');
+  } finally {
+    setProfileLoading(false);
+  }
+};
+
+// Delete Account Function
+const handleDeleteAccount = async () => {
+  if (!deletePassword) {
+    setError('Please enter your password');
+    return;
+  }
+
+  if (!window.confirm('⚠️ Are you sure? This action is PERMANENT and cannot be undone. All your data will be deleted.')) {
+    return;
+  }
+
+  setProfileLoading(true);
+  setError(null);
+
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_BASE_URL}/api/auth/account/delete`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ password: deletePassword })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert('🗑️ Account deleted successfully. Goodbye!');
+      handleLogout();
+      setShowDeleteConfirm(false);
+    } else {
+      setError(data.error || 'Account deletion failed');
+    }
+  } catch (err) {
+    setError('Connection error. Please try again.');
+  } finally {
+    setProfileLoading(false);
+  }
+};
+
   // ========== LOGIN/REGISTER UI ==========
   
   if (!isAuthenticated) {
@@ -748,6 +982,15 @@ function App() {
                 📊 Analytics
               </button>
             </li>
+            {/* ADD THIS NEW TAB RIGHT AFTER: */}
+            <li className="nav-item">
+              <button 
+                className={`nav-link ${activeTab === 'profile' ? 'active' : ''}`}
+                onClick={() => setActiveTab('profile')}
+              >
+                👤 Account Settings
+              </button>
+            </li>
           </ul>
         </div>
       </div>
@@ -902,6 +1145,24 @@ function App() {
                         <strong>⚠️ Important Disclaimer:</strong> This AI analysis is a screening tool and NOT a definitive diagnosis. 
                         Always consult qualified healthcare professionals for proper medical evaluation and treatment decisions.
                       </div>
+
+                       {/* ADD THIS BUTTON HERE */}
+                      <button 
+                        className="btn btn-success w-100 mt-3"
+                        onClick={downloadSingleReport}
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm me-2"></span>
+                            Generating Report...
+                          </>
+                        ) : (
+                          <>
+                            📄 Download PDF Report
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
                 )}
@@ -1171,6 +1432,24 @@ function App() {
                               Professional radiologist review is required for clinical diagnosis and treatment planning.
                             </small>
                           </div>
+
+                           {/* ADD THIS BUTTON HERE */}
+                          <button 
+                            className="btn btn-success w-100 mt-3"
+                            onClick={downloadBatchReport}
+                            disabled={batchLoading}
+                          >
+                            {batchLoading ? (
+                              <>
+                                <span className="spinner-border spinner-border-sm me-2"></span>
+                                Generating Batch Report...
+                              </>
+                            ) : (
+                              <>
+                                📄 Download Batch PDF Report
+                              </>
+                            )}
+                          </button>
                         </>
                       )}
                     </div>
@@ -1356,6 +1635,204 @@ function App() {
                       <p className="text-center text-muted">No prediction history available</p>
                     )}
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Account Settings Tab */}
+        {activeTab === 'profile' && (
+          <div className="col-12">
+            <div className="row">
+              {/* Update Profile Section */}
+              <div className="col-md-6">
+                <div className="card shadow-sm">
+                  <div className="card-header bg-info text-white">
+                    <h5 className="mb-0">✏️ Update Profile</h5>
+                  </div>
+                  <div className="card-body">
+                    <form onSubmit={handleUpdateProfile}>
+                      <div className="mb-3">
+                        <label className="form-label">Full Name</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={profileForm.fullName}
+                          onChange={(e) => setProfileForm({...profileForm, fullName: e.target.value})}
+                          placeholder="Enter full name"
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <label className="form-label">Email</label>
+                        <input
+                          type="email"
+                          className="form-control"
+                          value={profileForm.email}
+                          onChange={(e) => setProfileForm({...profileForm, email: e.target.value})}
+                          placeholder="Enter email"
+                        />
+                      </div>
+
+                      <hr />
+
+                      <h6 className="mb-3">Change Password (Optional)</h6>
+
+                      <div className="mb-3">
+                        <label className="form-label">Current Password</label>
+                        <input
+                          type="password"
+                          className="form-control"
+                          value={profileForm.oldPassword}
+                          onChange={(e) => setProfileForm({...profileForm, oldPassword: e.target.value})}
+                          placeholder="Enter current password"
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <label className="form-label">New Password</label>
+                        <input
+                          type="password"
+                          className="form-control"
+                          value={profileForm.newPassword}
+                          onChange={(e) => setProfileForm({...profileForm, newPassword: e.target.value})}
+                          placeholder="Enter new password"
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label className="form-label">Confirm New Password</label>
+                        <input
+                          type="password"
+                          className="form-control"
+                          value={profileForm.confirmPassword}
+                          onChange={(e) => setProfileForm({...profileForm, confirmPassword: e.target.value})}
+                          placeholder="Confirm new password"
+                        />
+                      </div>
+
+                      <button type="submit" className="btn btn-info w-100" disabled={profileLoading}>
+                        {profileLoading ? (
+                          <>
+                            <span className="spinner-border spinner-border-sm me-2"></span>
+                            Updating...
+                          </>
+                        ) : (
+                          '💾 Update Profile'
+                        )}
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              {/* Account Information & Danger Zone */}
+              <div className="col-md-6">
+                <div className="card shadow-sm mb-3">
+                  <div className="card-header bg-secondary text-white">
+                    <h5 className="mb-0">ℹ️ Account Information</h5>
+                  </div>
+                  <div className="card-body">
+                    <div className="mb-3">
+                      <label className="form-label">Username</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={user?.username || ''}
+                        disabled
+                      />
+                      <small className="text-muted">Username cannot be changed</small>
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label">Current Email</label>
+                      <input
+                        type="email"
+                        className="form-control"
+                        value={user?.email || ''}
+                        disabled
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label">Account Role</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={user?.role || 'user'}
+                        disabled
+                      />
+                    </div>
+                    <div className="alert alert-info">
+                      <small>
+                        <strong>📝 Note:</strong> Your username is permanent and serves as your unique identifier.
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                {/* Danger Zone */}
+                <div className="card shadow-sm border-danger">
+                  <div className="card-header bg-danger text-white">
+                    <h5 className="mb-0">⚠️ Danger Zone</h5>
+                  </div>
+                  <div className="card-body">
+                    {!showDeleteConfirm ? (
+                      <>
+                        <p className="text-muted">
+                          Permanently delete your account and all associated data. This action cannot be undone.
+                        </p>
+                        <button
+                          className="btn btn-danger w-100"
+                          onClick={() => setShowDeleteConfirm(true)}
+                        >
+                          🗑️ Delete Account
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <div className="alert alert-danger mb-3">
+                          <strong>⚠️ FINAL WARNING:</strong> This will permanently delete your account and all analysis history.
+                        </div>
+
+                        <div className="mb-3">
+                          <label className="form-label">Enter your password to confirm deletion:</label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            value={deletePassword}
+                            onChange={(e) => setDeletePassword(e.target.value)}
+                            placeholder="Enter password"
+                          />
+                        </div>
+                        <div className="d-grid gap-2">
+                  <button
+                    className="btn btn-danger"
+                    onClick={handleDeleteAccount}
+                    disabled={profileLoading || !deletePassword}
+                  >
+                    {profileLoading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2"></span>
+                        Deleting...
+                      </>
+                    ) : (
+                      '✓ Confirm Deletion'
+                    )}
+                  </button>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setShowDeleteConfirm(false);
+                      setDeletePassword('');
+                    }}
+                    disabled={profileLoading}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
                 </div>
               </div>
             </div>
