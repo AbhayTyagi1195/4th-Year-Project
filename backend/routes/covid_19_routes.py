@@ -203,7 +203,7 @@ def predict_covid(image_path):
     if covid_19_model is None:
         raise Exception("COVID-19 Model not loaded")
     
-    IMAGE_SIZE = 224  # Most COVID-19 models use 224x224
+    IMAGE_SIZE = 150  # Most COVID-19 models use 224x224
     img = load_img(image_path, target_size=(IMAGE_SIZE, IMAGE_SIZE))
     img_array = img_to_array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
