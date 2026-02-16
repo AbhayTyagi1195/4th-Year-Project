@@ -257,7 +257,7 @@ def test_interface():
             return render_template('covid_19_test.html', 
                                  result=result, 
                                  confidence=f"{confidence*100:.2f}%", 
-                                 file_path=f'/api/covid_19/uploads/{filename}')
+                                 file_path=f'/api/uploads/covid_19/{filename}')
 
     return render_template('covid_19_test.html', result=None)
 
@@ -529,6 +529,8 @@ def get_analytics():
         for item in recent:
             item['_id'] = str(item['_id'])
             item['userId'] = str(item['userId'])
+            if 'batchId' in item and item['batchId']:
+                item['batchId'] = str(item['batchId'])
         
         return jsonify({
             'totalPredictions': total_predictions,
