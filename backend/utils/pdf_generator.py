@@ -1,4 +1,4 @@
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle, PageBreak
@@ -8,20 +8,64 @@ from datetime import datetime
 import os
 
 class MedicalReportGenerator:
-    def __init__(self, output_path, analysis_type='brain_tumor'):
+    def __init__(self, output_path, disease_type='brain_tumor'):
         """
         Initialize PDF generator
         
         Args:
             output_path: Path where PDF will be saved
-            analysis_type: 'brain_tumor' or 'covid_19'
+            disease_type: 'brain_tumor' or 'covid_19'
         """
         self.output_path = output_path
-        self.analysis_type = analysis_type
-        self.doc = SimpleDocTemplate(output_path, pagesize=letter)
+        self.disease_type = disease_type  # ✅ Store disease_type
+        self.doc = SimpleDocTemplate(output_path, pagesize=A4)
         self.styles = getSampleStyleSheet()
         self.story = []
-        
+        self._create_custom_styles()
+
+    def _create_custom_styles(self):
+        """Create custom paragraph styles"""
+        self.styles.add(ParagraphStyle(
+            name='CustomTitle',
+            parent=self.styles['Heading1'],
+            fontSize=24,
+            textColor=colors.HexColor('#2c3e50'),
+            alignment=TA_CENTER,
+            fontName='Helvetica-Bold'
+        ))
+        self.styles.add(ParagraphStyle(
+            name='SectionHeader',
+            parent=self.styles['Heading2'],
+            fontSize=18,
+            textColor=colors.HexColor('#e74c3c'),
+            fontName='Helvetica-Bold',
+            spaceBefore=20,
+            spaceAfter=10
+        ))
+        self.styles.add(ParagraphStyle(
+            name='InfoHeader',
+            parent=self.styles['Heading3'],
+            fontSize=14,
+            textColor=colors.HexColor('#3498db'),
+            spaceAfter=15,
+            spaceBefore=8,
+            fontName='Helvetica-Bold'
+        ))
+
+    def _get_system_name(self):
+        """Get system name based on disease type"""
+        if self.disease_type == 'covid_19':
+            return "Advanced COVID-19 Detection System with AI"
+        else:
+            return "Advanced Brain Tumor Detection with AI"
+    
+    def _get_analysis_type(self):
+        """Get analysis type based on disease type"""
+        if self.disease_type == 'covid_19':
+            return "Single Chest X-ray Analysis"
+        else:
+            return "Single MRI Analysis"
+    
     def add_header(self, username, report_type="Single Analysis"):
         """Add report header"""
         title_style = ParagraphStyle(
@@ -33,8 +77,9 @@ class MedicalReportGenerator:
             spaceAfter=30
         )
 
-        # Determine system name based on analysis type
-        system_name = 'Advanced Brain Tumor Detection with AI' if self.analysis_type == 'brain_tumor' else 'COVID-19 Detection System with AI'
+        # ✅ Use disease_type instead of analysis_type
+        system_name = self._get_system_name()
+        analysis_type = self._get_analysis_type()
         
         self.story.append(Paragraph(f"Medical Image Analysis Report - {report_type}", title_style))
         self.story.append(Spacer(1, 0.2*inch))
@@ -45,7 +90,7 @@ class MedicalReportGenerator:
             ['Date:', datetime.now().strftime('%Y-%m-%d %H:%M:%S')],
             ['System:', system_name],
             ['Report Type:', report_type],
-            ['Analysis Type:', 'Brain MRI Analysis' if self.analysis_type == 'brain_tumor' else 'COVID-19 Chest X-Ray Analysis']
+            ['Analysis Type:', analysis_type]
         ]
         
         info_table = Table(info_data, colWidths=[2*inch, 4*inch])
@@ -68,7 +113,7 @@ class MedicalReportGenerator:
             'ResultHeader',
             parent=self.styles['Heading2'],
             fontSize=16,
-            textColor=colors.HexColor('#d32f2f') if self.analysis_type == 'brain_tumor' else colors.HexColor('#1976d2'),
+            textColor=colors.HexColor('#d32f2f') if self.disease_type == 'brain_tumor' else colors.HexColor('#1976d2'),
             spaceAfter=12
         )
         
@@ -109,8 +154,8 @@ class MedicalReportGenerator:
         # Result data
         severity = self._get_severity(confidence)
 
-        # Get dynamic color based on analysis type
-        if self.analysis_type == 'brain_tumor':
+        # ✅ Get dynamic color based on disease_type
+        if self.disease_type == 'brain_tumor':
             table_color = self._get_tumor_color(prediction)
         else:
             table_color = self._get_covid_color(prediction)
@@ -146,7 +191,7 @@ class MedicalReportGenerator:
             'SummaryHeader',
             parent=self.styles['Heading2'],
             fontSize=18,
-            textColor=colors.HexColor('#d32f2f') if self.analysis_type == 'brain_tumor' else colors.HexColor('#1976d2'),
+            textColor=colors.HexColor('#d32f2f') if self.disease_type == 'brain_tumor' else colors.HexColor('#1976d2'),
             spaceAfter=12
         )
         
@@ -167,8 +212,8 @@ class MedicalReportGenerator:
         
         prediction_types_text = '<br/>'.join([f"{k}: {v}" for k, v in prediction_types.items()])
         
-        # Dynamic label based on analysis type
-        types_label = 'Tumor Types Detected:' if self.analysis_type == 'brain_tumor' else 'Infection Types Detected:'
+        # ✅ Dynamic label based on disease_type
+        types_label = 'Tumor Types Detected:' if self.disease_type == 'brain_tumor' else 'Infection Types Detected:'
         
         # Summary table
         summary_data = [
@@ -254,8 +299,8 @@ class MedicalReportGenerator:
             
             result_table = Table(result_data, colWidths=[2*inch, 4*inch])
 
-            # Get dynamic color based on analysis type
-            if self.analysis_type == 'brain_tumor':
+            # ✅ Get dynamic color based on disease_type
+            if self.disease_type == 'brain_tumor':
                 table_color = self._get_tumor_color(prediction)
             else:
                 table_color = self._get_covid_color(prediction)
@@ -292,8 +337,8 @@ class MedicalReportGenerator:
         
         self.story.append(Paragraph("Medical Information", info_style))
         
-        # ✅ FIXED: Check analysis type and provide appropriate medical info
-        if self.analysis_type == 'brain_tumor':
+        # ✅ Check disease_type and provide appropriate medical info
+        if self.disease_type == 'brain_tumor':
             medical_info = {
                 'Glioma Tumor': [
                     'Most common primary brain tumor in adults',
@@ -341,7 +386,7 @@ class MedicalReportGenerator:
                     'RT-PCR test recommended for confirmation of diagnosis',
                     'Self-isolation and medical monitoring required if positive'
                 ],
-                'Lung Opacity': [
+                'Lung_Opacity': [
                     'Areas of increased density in lung tissue visible on X-ray',
                     'Non-specific finding that requires clinical correlation',
                     'Can indicate infection, inflammation, fluid accumulation, or other conditions',
@@ -370,7 +415,7 @@ class MedicalReportGenerator:
             if 'covid' in pred_lower:
                 normalized_type = 'COVID-19'
             elif 'lung' in pred_lower and 'opacity' in pred_lower:
-                normalized_type = 'Lung Opacity'
+                normalized_type = 'Lung_Opacity'
             elif 'viral' in pred_lower and 'pneumonia' in pred_lower:
                 normalized_type = 'Viral Pneumonia'
             elif 'normal' in pred_lower:
@@ -397,8 +442,8 @@ class MedicalReportGenerator:
         
         self.story.append(Paragraph("Recommendations", rec_style))
 
-        # ✅ FIXED: Check analysis type and provide appropriate recommendations
-        if self.analysis_type == 'brain_tumor':
+        # ✅ Check disease_type and provide appropriate recommendations
+        if self.disease_type == 'brain_tumor':
             if confidence >= 90 and has_condition:
                 recommendations = [
                     'Immediate Action Required: Schedule urgent consultation with a neurologist or neurosurgeon',
@@ -557,7 +602,7 @@ class MedicalReportGenerator:
 
 def generate_brain_tumor_single_report(output_path, username, prediction, confidence, image_path=None):
     """Generate a single brain tumor analysis report"""
-    generator = MedicalReportGenerator(output_path, analysis_type='brain_tumor')
+    generator = MedicalReportGenerator(output_path, disease_type='brain_tumor')
     
     generator.add_header(username, "Single Image Analysis")
     generator.add_analysis_result(prediction, confidence, image_path)
@@ -571,7 +616,7 @@ def generate_brain_tumor_single_report(output_path, username, prediction, confid
 
 def generate_brain_tumor_batch_report(output_path, username, results):
     """Generate a batch brain tumor analysis report"""
-    generator = MedicalReportGenerator(output_path, analysis_type='brain_tumor')
+    generator = MedicalReportGenerator(output_path, disease_type='brain_tumor')
     
     generator.add_header(username, "Batch Image Analysis")
     generator.add_batch_summary(results)
@@ -586,7 +631,7 @@ def generate_brain_tumor_batch_report(output_path, username, results):
 
 def generate_covid_single_report(output_path, username, prediction, confidence, image_path=None):
     """Generate a single COVID-19 analysis report"""
-    generator = MedicalReportGenerator(output_path, analysis_type='covid_19')
+    generator = MedicalReportGenerator(output_path, disease_type='covid_19')
     
     generator.add_header(username, "Single Image Analysis")
     generator.add_analysis_result(prediction, confidence, image_path)
@@ -600,7 +645,7 @@ def generate_covid_single_report(output_path, username, prediction, confidence, 
 
 def generate_covid_batch_report(output_path, username, results):
     """Generate a batch COVID-19 analysis report"""
-    generator = MedicalReportGenerator(output_path, analysis_type='covid_19')
+    generator = MedicalReportGenerator(output_path, disease_type='covid_19')
     
     generator.add_header(username, "Batch Image Analysis")
     generator.add_batch_summary(results)
@@ -613,10 +658,16 @@ def generate_covid_batch_report(output_path, username, results):
 # LEGACY SUPPORT (For backward compatibility with existing brain tumor routes)
 # ============================================================================
 
-def generate_single_report(output_path, username, prediction, confidence, image_path=None):
-    """Legacy function - defaults to brain tumor for backward compatibility"""
-    return generate_brain_tumor_single_report(output_path, username, prediction, confidence, image_path)
+def generate_single_report(output_path, username, prediction, confidence, image_path=None, disease_type='brain_tumor'):
+    """Legacy function - supports both brain tumor and COVID-19"""
+    if disease_type == 'covid_19':
+        return generate_covid_single_report(output_path, username, prediction, confidence, image_path)
+    else:
+        return generate_brain_tumor_single_report(output_path, username, prediction, confidence, image_path)
 
-def generate_batch_report(output_path, username, results):
-    """Legacy function - defaults to brain tumor for backward compatibility"""
-    return generate_brain_tumor_batch_report(output_path, username, results)
+def generate_batch_report(output_path, username, results, disease_type='brain_tumor'):
+    """Legacy function - supports both brain tumor and COVID-19"""
+    if disease_type == 'covid_19':
+        return generate_covid_batch_report(output_path, username, results)
+    else:
+        return generate_brain_tumor_batch_report(output_path, username, results)
