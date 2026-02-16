@@ -10,8 +10,16 @@ import time
 
 report_bp = Blueprint('report', __name__)
 
-# Ensure output directory exists
-os.makedirs('output', exist_ok=True)
+# ✅ Define output directories
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUTPUT_DIR = os.path.join(BASE_DIR, 'output')
+BRAIN_TUMOR_OUTPUT_DIR = os.path.join(OUTPUT_DIR, 'brain_tumor')
+COVID_19_OUTPUT_DIR = os.path.join(OUTPUT_DIR, 'covid_19')
+
+# ✅ Create directories if they don't exist
+os.makedirs(BRAIN_TUMOR_OUTPUT_DIR, exist_ok=True)
+os.makedirs(COVID_19_OUTPUT_DIR, exist_ok=True)
+
 
 @report_bp.route('/api/brain_tumor/predict/report', methods=['POST'])
 @token_required
@@ -47,8 +55,10 @@ def download_brain_tumor_single_report():
 
         # Create temporary file for PDF
         temp_dir = tempfile.gettempdir()
-        pdf_filename = f"medical_report_{username}_{int(time.time())}.pdf"
-        pdf_path = os.path.join(temp_dir, pdf_filename)
+        # ✅ Save PDF in output/brain_tumor directory
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        pdf_filename = f"brain_tumor_report_{username}_{timestamp}.pdf"
+        pdf_path = os.path.join(BRAIN_TUMOR_OUTPUT_DIR, pdf_filename)
 
         print(f"💾 Generating PDF: {pdf_path}")
 
@@ -58,7 +68,8 @@ def download_brain_tumor_single_report():
             username=username,
             prediction=prediction,
             confidence=confidence,
-            image_path=image_path
+            image_path=image_path,
+            disease_type="brain_tumor"
         )
         
         if not success:
@@ -126,8 +137,9 @@ def download_brain_tumor_batch_report():
         
         # Create temporary file for PDF
         temp_dir = tempfile.gettempdir()
-        pdf_filename = f"batch_report_{username}_{int(time.time())}.pdf"
-        pdf_path = os.path.join(temp_dir, pdf_filename)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        pdf_filename = f"brain_tumor_batch_report_{username}_{timestamp}.pdf"
+        pdf_path = os.path.join(BRAIN_TUMOR_OUTPUT_DIR, pdf_filename)
 
         print(f"💾 Generating batch PDF: {pdf_path}")
         
@@ -135,7 +147,8 @@ def download_brain_tumor_batch_report():
         success = generate_batch_report(
             output_path=pdf_path,
             username=username,
-            results=results
+            results=results,
+            disease_type="brain_tumor"
         )
         
         if not success:
@@ -198,8 +211,10 @@ def download_covid_19_single_report():
 
         # Create temporary file for PDF
         temp_dir = tempfile.gettempdir()
-        pdf_filename = f"medical_report_{username}_{int(time.time())}.pdf"
-        pdf_path = os.path.join(temp_dir, pdf_filename)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        pdf_filename = f"covid19_report_{username}_{timestamp}.pdf"
+        pdf_path = os.path.join(COVID_19_OUTPUT_DIR, pdf_filename)
+
 
         print(f"💾 Generating PDF: {pdf_path}")
 
@@ -209,7 +224,8 @@ def download_covid_19_single_report():
             username=username,
             prediction=prediction,
             confidence=confidence,
-            image_path=image_path
+            image_path=image_path,
+            disease_type="covid_19"
         )
         
         if not success:
@@ -277,8 +293,9 @@ def download_covid_19_batch_report():
         
         # Create temporary file for PDF
         temp_dir = tempfile.gettempdir()
-        pdf_filename = f"batch_report_{username}_{int(time.time())}.pdf"
-        pdf_path = os.path.join(temp_dir, pdf_filename)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        pdf_filename = f"covid19_batch_report_{username}_{timestamp}.pdf"
+        pdf_path = os.path.join(COVID_19_OUTPUT_DIR, pdf_filename)
 
         print(f"💾 Generating batch PDF: {pdf_path}")
         
@@ -286,7 +303,8 @@ def download_covid_19_batch_report():
         success = generate_batch_report(
             output_path=pdf_path,
             username=username,
-            results=results
+            results=results,
+            disease_type="covid_19"
         )
         
         if not success:
