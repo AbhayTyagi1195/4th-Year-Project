@@ -517,6 +517,8 @@ def get_analytics():
         for item in recent:
             item['_id'] = str(item['_id'])
             item['userId'] = str(item['userId'])
+            if 'batchId' in item and item['batchId']:
+                item['batchId'] = str(item['batchId'])
         
         return jsonify({
             'totalPredictions': total_predictions,
