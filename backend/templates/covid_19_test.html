@@ -188,7 +188,7 @@
             <div class="tab-pane fade" id="api" role="tabpanel">
                 <div class="card shadow p-4 mt-4 api-section">
                     <h4 class="text-primary">API Predict Endpoint</h4>
-                    <p class="text-muted">Test <code>/api/predict</code> endpoint with AJAX</p>
+                    <p class="text-muted">Test <code>/api/covid_19/predict</code> endpoint with AJAX</p>
                     <form id="api-form">
                         <div class="mb-3">
                             <label for="api-file" class="form-label">Select Chest X-Ray Image:</label>
@@ -216,7 +216,7 @@
             <div class="tab-pane fade" id="debug" role="tabpanel">
                 <div class="card shadow p-4 mt-4 debug-section">
                     <h4 class="text-success">Debug Prediction Endpoint</h4>
-                    <p class="text-muted">Test <code>/api/debug/prediction</code> with detailed analysis</p>
+                    <p class="text-muted">Test <code>/api/covid_19debug/prediction</code> with detailed analysis</p>
                     <form id="debug-form">
                         <div class="mb-3">
                             <label for="debug-file" class="form-label">Select Chest X-Ray Image:</label>
@@ -244,7 +244,7 @@
             <div class="tab-pane fade" id="batch" role="tabpanel">
                 <div class="card shadow p-4 mt-4" style="border-left: 4px solid #fd7e14;">
                     <h4 class="text-warning">📚 Batch Prediction Endpoint</h4>
-                    <p class="text-muted">Test <code>/api/predict/batch</code> endpoint with multiple Chest X-Rays</p>
+                    <p class="text-muted">Test <code>/api/covid_19/predict/batch</code> endpoint with multiple Chest X-Rays</p>
                     <form id="batch-form">
                         <div class="mb-3">
                             <label for="batch-files" class="form-label">Select Multiple Chest X-Ray Images:</label>
@@ -282,7 +282,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <h5>📈 Charts Generation</h5>
-                            <p><code>/api/results/charts</code> - Generate research visualizations</p>
+                            <p><code>/api/covid_19/results/charts</code> - Generate research visualizations</p>
                             <div class="d-grid gap-2">
                                 <button type="button" class="btn btn-success" onclick="testChartsGeneration()">
                                     <span id="charts-spinner" class="spinner-border spinner-border-sm d-none"></span>
@@ -295,7 +295,7 @@
                         </div>
                         <div class="col-md-6">
                             <h5>📊 Statistical Analysis</h5>
-                            <p><code>/api/results/statistics</code> - Get detailed statistics</p>
+                            <p><code>/api/covid_19/results/statistics</code> - Get detailed statistics</p>
                             <div class="d-grid gap-2">
                                 <button type="button" class="btn btn-info" onclick="testStatisticsGeneration()">
                                     <span id="stats-spinner" class="spinner-border spinner-border-sm d-none"></span>
@@ -346,32 +346,36 @@
                 <div class="col-md-4">
                     <strong>Standard Endpoints:</strong>
                     <ul class="list-unstyled mt-2">
+                        <li><code>GET /</code> - Documantation</li>
                         <li><code>GET /api/health</code> - Health Check</li>
-                        <li><code>GET /api/classes</code> - COVID Classes</li>
-                        <li><code>GET /api/model/info</code> - Model Info</li>
-                        <li><code>GET /api/analytics/summary</code> - Analytics</li>
+                        <li><code>GET /api/covid_19/classes</code> - COVID Classes</li>
+                        <li><code>GET /api/covid_19/model/info</code> - Model Info</li>
+                        <li><code>GET /api/covid_19/analytics</code> - Analytics</li>
+                        <li><code>GET /api/covid_19/history</code> - History</li>
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <strong>POST Endpoints:</strong>
                     <ul class="list-unstyled mt-2">
-                        <li><code>POST /api/predict</code> - Single X-Ray</li>
-                        <li><code>POST /api/predict/batch</code> - Multiple X-Rays</li>
-                        <li><code>POST /api/debug/prediction</code> - Debug</li>
+                        <li><code>POST /api/covid_19/predict</code> - Single X-Ray</li>
+                        <li><code>POST /api/covid_19/predict/batch</code> - Multiple X-Rays</li>
+                        <li><code>POST /api/covid_19/debug/prediction</code> - Debug</li>
                     </ul>
                     <strong>Research Endpoints:</strong>
                     <ul class="list-unstyled mt-2">
-                        <li><code>GET /api/results/charts</code> - Charts</li>
-                        <li><code>GET /api/results/statistics</code> - Stats</li>
+                        <li><code>GET /api/covid_19/results/charts</code> - Charts</li>
+                        <li><code>GET /api/covid_19/results/statistics</code> - Stats</li>
                     </ul>
                 </div>
                 <div class="col-md-4">
                     <strong>Test These Endpoints:</strong>
                     <div class="d-grid gap-1">
                         <button class="btn btn-sm btn-outline-primary" onclick="testEndpoint('/api/health')">Test Health</button>
-                        <button class="btn btn-sm btn-outline-primary" onclick="testEndpoint('/api/classes')">Test Classes</button>
-                        <button class="btn btn-sm btn-outline-primary" onclick="testEndpoint('/api/model/info')">Test Model Info</button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="testEndpoint('/api/covid_19/classes')">Test Classes</button>
+                        <button class="btn btn-sm btn-outline-primary" onclick="testEndpoint('/api/covid_19/model/info')">Test Model Info</button>
+                        <button class="btn btn-sm btn-outline-success" onclick="testEndpoint('/api/covid_19/results/statistics')">Test Statistics</button>
                         <button class="btn btn-sm btn-outline-info" onclick="testChartsQuick()">Generate Charts</button>
+
                     </div>
                 </div>
             </div>
@@ -383,11 +387,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Variable declarations
-        let chartsGenerated = false;
-        let statisticsGenerated = false;
-        let savedChartsData = null;
-        let savedStatsData = null;
 
         // Test API Predict endpoint
         function testApiPredict() {
@@ -407,7 +406,7 @@
             const formData = new FormData();
             formData.append('image', fileInput.files[0]);
 
-            fetch('/api/predict', {
+            fetch('/api/covid_19/predict', {
                 method: 'POST',
                 body: formData
             })
@@ -425,7 +424,7 @@
             })
             .catch(error => {
                 spinner.classList.add('d-none');
-                jsonDiv.textContent = `Error: ${error.message}`;
+                jsonDiv.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
                 resultsDiv.style.display = 'block';
             });
         }
@@ -448,7 +447,7 @@
             const formData = new FormData();
             formData.append('image', fileInput.files[0]);
 
-            fetch('/api/debug/prediction', {
+            fetch('/api/covid_19/debug/prediction', {
                 method: 'POST',
                 body: formData
             })
@@ -466,7 +465,7 @@
             })
             .catch(error => {
                 spinner.classList.add('d-none');
-                jsonDiv.textContent = `Error: ${error.message}`;
+                jsonDiv.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
                 resultsDiv.style.display = 'block';
             });
         }
@@ -496,7 +495,7 @@
                 formData.append('images', fileInput.files[i]);
             }
 
-            fetch('/api/predict/batch', {
+            fetch('/api/covid_19/predict/batch', {
                 method: 'POST',
                 body: formData
             })
@@ -512,7 +511,12 @@
                 spinner.classList.add('d-none');
                 jsonDiv.textContent = `Error: ${error.message}`;
                 resultsDiv.style.display = 'block';
-                summaryDiv.innerHTML = `<div class="alert alert-danger"><h6>❌ Error processing X-Ray images</h6><p>${error.message}</p></div>`;
+                summaryDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h6>❌ Error processing images</h6>
+                        <p>${error.message}</p>
+                    </div>
+                `;
             });
         }
 
@@ -543,10 +547,21 @@
                     </div>
             `;
             
-            if (summary.by_condition && Object.keys(summary.by_condition).length > 0) {
-                summaryHtml += `<div class="col-12 mt-2"><small class="text-muted">Condition Distribution:</small><div class="row mt-2">`;
-                Object.entries(summary.by_condition).forEach(([type, count]) => {
-                    summaryHtml += `<div class="col-6 col-md-3 mb-2"><div class="text-center p-2 border rounded"><strong>${count}</strong><br/><small>${type}</small></div></div>`;
+            if (summary.by_tumor_type && Object.keys(summary.by_tumor_type).length > 0) {
+            summaryHtml += `
+                    <div class="col-12 mt-2">
+                        <small class="text-muted">Tumor Type Distribution:</small>
+                        <div class="row mt-2">
+                `;
+            Object.entries(summary.by_tumor_type).forEach(([type, count]) => {
+                summaryHtml += `
+                        <div class="col-6 col-md-3 mb-2">
+                            <div class="text-center p-2 border rounded">
+                                <strong>${count}</strong><br/>
+                                <small>${type}</small>
+                            </div>
+                        </div>
+                    `;
                 });
                 summaryHtml += `</div></div>`;
             }
@@ -565,6 +580,10 @@
             let detailedHtml = '<h5>📋 Detailed Analysis:</h5><div class="row">';
             
             data.results.forEach((result, index) => {
+                // Find corresponding file
+                const file = Array.from(files).find(f => f.name === result.filename);
+                
+                // Get confidence
                 const confidence = result.confidence_percentage || (parseFloat(result.confidence_score) * 100);
                 const covidInfo = getCovidInformation(result.prediction, confidence);
                 
@@ -576,7 +595,9 @@
                                 <span class="badge bg-light text-dark float-end">${covidInfo.severity}</span>
                             </div>
                             <div class="card-body p-2">
-                                <p class="mb-2"><small><strong>📄 File:</strong> ${result.filename}</small></p>
+                                <p class="mb-2">
+                                    <small><strong>📄 File:</strong> ${result.filename}</small>
+                                    </p>
                                 <div class="alert alert-light border p-2 mb-2">
                                     <div class="row">
                                         <div class="col-6">
@@ -620,7 +641,11 @@
             });
             
             detailedHtml += '</div>';
-            detailedHtml += `<div class="alert alert-warning mt-3"><strong>⚠️ Disclaimer:</strong> AI-generated results. RT-PCR testing and professional medical review required for diagnosis.</div>`;
+            detailedHtml += `
+            <div class="alert alert-warning mt-3">
+                <strong>⚠️ Disclaimer:</strong> AI-generated results. RT-PCR testing.
+                Professional medical review required for diagnosis.
+            </div>`;
             detailedDiv.innerHTML = detailedHtml;
         }
 
@@ -630,7 +655,9 @@
             const jsonDiv = document.getElementById('quick-json');
 
             const existingCharts = resultsDiv.querySelector('.mt-4');
-            if (existingCharts) existingCharts.remove();
+            if (existingCharts) {
+                existingCharts.remove();
+            }
 
             fetch(endpoint)
             .then(response => response.json())
@@ -652,7 +679,7 @@
             resultsDiv.style.display = 'block';
             jsonDiv.innerHTML = '<div class="text-center"><div class="spinner-border text-info"></div><p>Generating charts...</p></div>';
 
-            fetch('/api/results/charts')
+            fetch('/api/covid_19/results/charts')
             .then(response => response.json())
             .then(data => {
                 jsonDiv.textContent = JSON.stringify(data, null, 2);
@@ -664,9 +691,15 @@
                         chartsHtml += `
                             <div class="col-md-6 col-sm-12 mb-3">
                                 <div class="card">
-                                    <div class="card-header bg-info text-white"><small>${chartTitle}</small></div>
+                                    <div class="card-header bg-info text-white">
+                                        <small>${chartTitle}</small>
+                                        </div>
                                     <div class="card-body text-center p-2">
-                                        <img src="data:image/png;base64,${chartBase64}" class="img-fluid" alt="${chartTitle}" style="max-height: 200px; cursor: pointer;" onclick="openImageModal('${chartBase64}', '${chartTitle}')">
+                                        <img src="data:image/png;base64,${chartBase64}" 
+                                        class="img-fluid" 
+                                        alt="${chartTitle}"
+                                        style="max-height: 200px; cursor: pointer;" 
+                                        onclick="openImageModal('${chartBase64}', '${chartTitle}')">
                                         <br><small class="text-muted">Click to enlarge</small>
                                     </div>
                                 </div>
@@ -679,7 +712,12 @@
             })
             .catch(error => {
                 resultsDiv.style.display = 'block';
-                jsonDiv.innerHTML = `<div class="alert alert-danger"><strong>Error:</strong> ${error.message}</div><pre>Unable to generate charts. Make predictions first.</pre>`;
+                jsonDiv.innerHTML = `
+                <div class="alert alert-danger">
+                    <strong>Error:</strong> ${error.message}
+                    </div>
+                    <pre>Unable to generate charts. Make sure you have made some predictions first using the other tabs.</pre>
+                    `;
             });
         }
 
@@ -700,7 +738,7 @@
             chartsDisplay.innerHTML = '';
             jsonDiv.textContent = '';
 
-            fetch('/api/results/charts')
+            fetch('/api/covid_19/results/charts')
             .then(response => response.json())
             .then(data => {
                 spinner.classList.add('d-none');
@@ -712,7 +750,13 @@
                 spinner.classList.add('d-none');
                 resultsDiv.style.display = 'block';
                 jsonDiv.textContent = `Error: ${error.message}`;
-                chartsDisplay.innerHTML = `<div class="col-12"><div class="alert alert-danger"><strong>Error generating charts:</strong> ${error.message}</div></div>`;
+                chartsDisplay.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-danger">
+                        <strong>Error generating charts:</strong> ${error.message}
+                        </div>
+                        </div>
+                        `;
             });
         }
 
@@ -732,10 +776,17 @@
                     chartsHtml += `
                         <div class="col-md-6 mb-4">
                             <div class="card">
-                                <div class="card-header bg-success text-white"><h6 class="mb-0">${chartTitle}</h6></div>
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0">${chartTitle}</h6>
+                                    </div>
                                 <div class="card-body text-center">
-                                    <img src="data:image/png;base64,${chartBase64}" class="img-fluid" alt="${chartTitle}" style="max-height: 300px; cursor: pointer;" onclick="openImageModal('${chartBase64}', '${chartTitle}')">
-                                    <br><small class="text-muted">Click to enlarge</small>
+                                    <img src="data:image/png;base64,${chartBase64}" 
+                                    class="img-fluid"
+                                     alt="${chartTitle}"
+                                      style="max-height: 300px; cursor: pointer;" 
+                                      onclick="openImageModal('${chartBase64}', '${chartTitle}')">
+                                    <br>
+                                    <small class="text-muted">Click to enlarge</small>
                                 </div>
                             </div>
                         </div>
@@ -743,7 +794,13 @@
                 });
                 chartsDisplay.innerHTML = chartsHtml;
             } else {
-                chartsDisplay.innerHTML = `<div class="col-12"><div class="alert alert-warning">No charts available. Make predictions first.</div></div>`;
+                chartsDisplay.innerHTML = `
+                <div class="col-12">
+                    <div class="alert alert-warning">
+                        No charts available. Make sure you have prediction history by using other tabs first.
+                        </div>
+                        </div>
+                        `;
             }
         }
 
@@ -762,7 +819,7 @@
             resultsDiv.style.display = 'none';
             jsonDiv.textContent = '';
 
-            fetch('/api/results/statistics')
+            fetch('/api/covid_19/results/statistics')
             .then(response => response.json())
             .then(data => {
                 spinner.classList.add('d-none');
@@ -792,8 +849,12 @@
                 tab.addEventListener('shown.bs.tab', function(e) {
                     if (e.target.getAttribute('data-bs-target') === '#results') {
                         setTimeout(() => {
-                            if (chartsGenerated && savedChartsData) displaySavedCharts(savedChartsData);
-                            if (statisticsGenerated && savedStatsData) displaySavedStatistics(savedStatsData);
+                            if (chartsGenerated && savedChartsData) { 
+                            displaySavedCharts(savedChartsData);
+                            }
+                            if (statisticsGenerated && savedStatsData) {
+                                displaySavedStatistics(savedStatsData);
+                            }
                         }, 100);
                     }
                 });
@@ -827,7 +888,9 @@
                                 <img src="data:image/png;base64,${base64Data}" class="img-fluid" alt="${title}">
                             </div>
                             <div class="modal-footer">
-                                <a href="data:image/png;base64,${base64Data}" download="${title}.png" class="btn btn-success">Download Chart</a>
+                                <a href="data:image/png;base64,${base64Data}" download="${title}.png" class="btn btn-success">
+                                    Download Chart
+                                    </a>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -836,7 +899,9 @@
             `;
             
             const existingModal = document.getElementById('chartModal');
-            if (existingModal) existingModal.remove();
+            if (existingModal) {
+                existingModal.remove();
+            }
             
             document.body.insertAdjacentHTML('beforeend', modalHtml);
             const modal = new bootstrap.Modal(document.getElementById('chartModal'));
@@ -1035,7 +1100,7 @@
             const formData = new FormData();
             formData.append('image', fileInput.files[0]);
 
-            fetch('/api/predict', {
+            fetch('/api/covid_19/predict', {
                 method: 'POST',
                 body: formData
             })
@@ -1075,7 +1140,10 @@
                                         <small><strong>📸 Chest X-Ray Image</strong></small>
                                     </div>
                                     <div class="card-body p-2">
-                                        <img src="${e.target.result}" class="img-fluid rounded" alt="Uploaded Chest X-Ray" style="width: 100%; height: 300px; object-fit: contain; background: #f8f9fa;">
+                                        <img src="${e.target.result}" 
+                                        class="img-fluid rounded" 
+                                        alt="Uploaded Chest X-Ray" 
+                                        style="width: 100%; height: 300px; object-fit: contain; background: #f8f9fa;">
                                         <div class="mt-2">
                                             <small class="text-muted">
                                                 <strong>File:</strong> ${fileInput.files[0].name}<br>
@@ -1153,7 +1221,10 @@
                 reader.onload = function(e) {
                     imageDiv.innerHTML = `
                         <div class="text-center">
-                            <img src="${e.target.result}" class="img-fluid rounded border" alt="Uploaded Image" style="max-height: 200px;">
+                            <img src="${e.target.result}" 
+                            class="img-fluid rounded border" 
+                            alt="Uploaded Image" 
+                            style="max-height: 200px;">
                             <div class="alert alert-danger mt-3">
                                 <strong>❌ Analysis Failed:</strong> ${error.message}
                                 <br><small>Please check image quality and try again</small>
@@ -1164,6 +1235,11 @@
                 reader.readAsDataURL(fileInput.files[0]);
             });
         }
+        // FIXED - Variable declarations at the top of script section
+        let chartsGenerated = false;
+        let statisticsGenerated = false;
+        let savedChartsData = null;
+        let savedStatsData = null;
     </script>
 </body>
 </html>
