@@ -1,34 +1,93 @@
+.disease-page {
+  padding-top: 1.2rem !important;
+}
+
 .disease-page .card {
-  border: 0;
-  border-radius: 12px;
+  border: 1px solid #e6ecf4 !important;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .disease-page .card-header {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  padding: 0.85rem 1rem;
+}
+
+.disease-page .card-body {
+  padding: 1rem;
+}
+
+.disease-page .nav.nav-pills {
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.disease-page .nav-pills .nav-link {
+  border-radius: 999px;
+  border: 1px solid #dbe6f3;
+  color: #334155;
+  background: #f8fbff;
   font-weight: 600;
-  border-top-left-radius: 12px !important;
-  border-top-right-radius: 12px !important;
+  padding: 0.45rem 0.95rem;
+  transition: all 0.2s ease;
 }
 
-.disease-page .form-control,
-.disease-page .btn,
-.disease-page .nav-link,
-.disease-page .alert {
-  border-radius: 10px;
+.disease-page .nav-pills .nav-link:hover {
+  border-color: #bfdbfe;
+  color: #1d4ed8;
 }
 
-.disease-page .table th,
-.disease-page .table td {
-  vertical-align: middle;
+.disease-page .nav-pills .nav-link.active {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-color: #1d4ed8;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.28);
 }
 
-.disease-page pre {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  padding: 10px;
+.disease-page .btn {
+  border-radius: 12px;
+  min-height: 42px;
+}
+
+.disease-page .form-control {
+  border-radius: 12px;
 }
 
 .disease-page img {
   object-fit: contain;
   background: #fff;
+  border: 1px solid #e8eef7;
+  border-radius: 12px;
+}
+
+.disease-page .table {
+  --bs-table-bg: #fff;
+  border-color: #e8eef7;
+}
+
+.disease-page .table thead th {
+  background: #f3f7fd;
+  color: #334155;
+  font-weight: 700;
+}
+
+.disease-page .table tbody tr:hover {
+  background: #f8fbff;
+}
+
+.disease-page pre {
+  background: #f8fbff;
+  border: 1px solid #e6edf7;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 0;
+}
+
+.disease-page .alert {
+  border-radius: 12px;
+}
+
+.disease-page .small {
+  color: #64748b;
 }
