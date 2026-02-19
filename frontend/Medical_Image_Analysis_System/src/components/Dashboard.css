@@ -1,26 +1,69 @@
+.dashboard-page {
+  padding-top: 1.2rem !important;
+}
+
+.dashboard-page h2 {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.dashboard-page .text-muted {
+  color: #667085 !important;
+}
+
 .dashboard-page .card {
-  border: 0;
-  border-radius: 12px;
+  border: 1px solid #e6ecf4 !important;
+  border-radius: 16px;
+  overflow: hidden;
 }
 
 .dashboard-page .card-header {
-  border-top-left-radius: 12px !important;
-  border-top-right-radius: 12px !important;
-  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  padding: 0.9rem 1rem;
+}
+
+.dashboard-page .card-body {
+  padding: 1rem 1rem 1.1rem;
 }
 
 .dashboard-page .btn {
-  border-radius: 10px;
+  border-radius: 12px;
+  min-height: 42px;
 }
 
-.dashboard-page .alert {
-  border-radius: 10px;
+.dashboard-page .btn-outline-danger:hover,
+.dashboard-page .btn-outline-info:hover {
+  box-shadow: 0 8px 16px rgba(2, 6, 23, 0.08);
 }
 
 .dashboard-page input.form-control {
-  border-radius: 10px;
+  border-radius: 12px;
+}
+
+.dashboard-page label.form-label {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: #334155;
+}
+
+.dashboard-page .alert {
+  border: 1px solid transparent;
+}
+
+.dashboard-page .alert-danger {
+  border-color: #fecaca;
+}
+
+.dashboard-page .alert-success {
+  border-color: #bbf7d0;
 }
 
 .dashboard-page .border-danger {
   border-width: 1.5px !important;
+}
+
+.dashboard-page hr {
+  opacity: 0.12;
 }
