@@ -1,207 +1,32 @@
-/* ========== GLOBAL RESET ========== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ========== ROOT VARIABLES (LIGHT THEME) ========== */
 :root {
-  /* Font Settings */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  line-height: 1.6;
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+  line-height: 1.5;
   font-weight: 400;
-
-  /* Color Scheme - LIGHT MODE for Medical App */
-  color-scheme: light;
   color: #212529;
-  background-color: #ffffff;
-
-  /* Font Rendering */
+  background-color: #f5f7fb;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* Medical App Color Palette */
-  --primary-color: #0d6efd;
-  --success-color: #198754;
-  --danger-color: #dc3545;
-  --warning-color: #ffc107;
-  --info-color: #0dcaf0;
-  --light-bg: #f8f9fa;
-  --dark-text: #212529;
-  --border-color: #dee2e6;
 }
 
-/* ========== BODY STYLES ========== */
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: #f5f7fa;
-  color: #212529;
   margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-/* ========== ROOT CONTAINER ========== */
-#root {
-  width: 100%;
   min-height: 100vh;
-  background: #f5f7fa;
+  background: #f5f7fb;
+  color: #212529;
 }
 
-/* ========== LINKS ========== */
+#root {
+  min-height: 100vh;
+}
+
 a {
-  color: #0d6efd;
   text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-a:hover {
-  color: #0a58ca;
-  text-decoration: underline;
-}
-
-/* ========== SCROLLBAR STYLING ========== */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* ========== SMOOTH SCROLLING ========== */
-html {
-  scroll-behavior: smooth;
-}
-
-/* ========== PRINT STYLES ========== */
-@media print {
-  body {
-    background: white;
-  }
-  
-  .no-print {
-    display: none !important;
-  }
-}
-
-/* ========== UTILITY CLASSES ========== */
-.text-truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.fade-in {
-  animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ========== RESPONSIVE IMAGES ========== */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* ========== BUTTON TRANSITIONS ========== */
-button {
-  transition: all 0.2s ease;
-}
-
-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-/* ========== FOCUS STATES (ACCESSIBILITY) ========== */
-*:focus {
-  outline: 2px solid #0d6efd;
-  outline-offset: 2px;
-}
-
-*:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* ========== CARD HOVER EFFECTS ========== */
-.card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-/* ========== LOADING SPINNER ========== */
-.spinner {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* ========== ACCESSIBILITY ========== */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-/* ========== MOBILE OPTIMIZATIONS ========== */
-@media (max-width: 768px) {
-  body {
-    font-size: 14px;
-  }
-  
-  #root {
-    padding: 0;
-  }
 }
