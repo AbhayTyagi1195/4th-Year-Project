@@ -1,93 +1,74 @@
-.disease-page {
-  padding-top: 1.2rem !important;
-}
-
-.disease-page .card {
-  border: 1px solid #e6ecf4 !important;
-  border-radius: 16px;
+.disease-page .card{
+  border-radius: 16px !important;
   overflow: hidden;
 }
-
-.disease-page .card-header {
+.disease-page .card-header{
   font-weight: 700;
-  letter-spacing: 0.2px;
-  padding: 0.85rem 1rem;
+  letter-spacing: .2px;
 }
 
-.disease-page .card-body {
-  padding: 1rem;
-}
-
-.disease-page .nav.nav-pills {
-  gap: 0.45rem;
-  flex-wrap: wrap;
-}
-
-.disease-page .nav-pills .nav-link {
+.disease-page .nav.nav-pills{ gap: .45rem; }
+.disease-page .nav-pills .nav-link{
+  border:1px solid #cddcf2;
+  background:#f5f9ff;
+  color:#1f3b66;
   border-radius: 999px;
-  border: 1px solid #dbe6f3;
-  color: #334155;
-  background: #f8fbff;
   font-weight: 600;
-  padding: 0.45rem 0.95rem;
-  transition: all 0.2s ease;
+  padding:.42rem .95rem;
+}
+.disease-page .nav-pills .nav-link.active{
+  border-color:transparent;
+  color:#fff;
+  background: linear-gradient(135deg,#2563eb,#7c3aed);
+  box-shadow: 0 8px 18px rgba(37,99,235,.25);
 }
 
-.disease-page .nav-pills .nav-link:hover {
-  border-color: #bfdbfe;
-  color: #1d4ed8;
-}
-
-.disease-page .nav-pills .nav-link.active {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  border-color: #1d4ed8;
-  color: #fff;
-  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.28);
-}
-
-.disease-page .btn {
+.disease-page .btn{
   border-radius: 12px;
   min-height: 42px;
+  font-weight: 600;
+}
+.disease-page .btn-danger{
+  background: linear-gradient(135deg,#ef4444,#dc2626);
+  border:none;
+}
+.disease-page .btn-info{
+  background: linear-gradient(135deg,#06b6d4,#0ea5e9);
+  border:none;
+  color:#fff;
+}
+.disease-page .btn-success{
+  background: linear-gradient(135deg,#22c55e,#16a34a);
+  border:none;
 }
 
-.disease-page .form-control {
+.disease-page .form-control{
   border-radius: 12px;
+  border:1px solid #cfdaea;
+}
+.disease-page .form-control:focus{
+  border-color:#95bdfb;
+  box-shadow:0 0 0 .2rem rgba(37,99,235,.14);
 }
 
-.disease-page img {
-  object-fit: contain;
-  background: #fff;
-  border: 1px solid #e8eef7;
+.disease-page img{
   border-radius: 12px;
+  border: 1px solid #e2eaf5;
+  background:#fff;
 }
 
-.disease-page .table {
-  --bs-table-bg: #fff;
-  border-color: #e8eef7;
+.disease-page .table thead th{
+  background:#f2f7ff;
+  color:#334155;
+  font-weight:700;
+}
+.disease-page .table tbody tr:hover{
+  background:#f8fbff;
 }
 
-.disease-page .table thead th {
-  background: #f3f7fd;
-  color: #334155;
-  font-weight: 700;
-}
-
-.disease-page .table tbody tr:hover {
-  background: #f8fbff;
-}
-
-.disease-page pre {
-  background: #f8fbff;
-  border: 1px solid #e6edf7;
+.disease-page pre{
+  background:#f8fbff;
+  border:1px solid #e3ecf8;
   border-radius: 12px;
   padding: 12px;
-  margin: 0;
-}
-
-.disease-page .alert {
-  border-radius: 12px;
-}
-
-.disease-page .small {
-  color: #64748b;
 }
