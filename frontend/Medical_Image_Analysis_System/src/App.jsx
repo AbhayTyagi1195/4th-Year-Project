@@ -224,7 +224,7 @@ function AppShell() {
       {isAuthenticated && (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <div className="container">
-            <Link className="navbar-brand" to="/dashboard">Medical AI</Link>
+            <Link className="navbar-brand" to="/dashboard">Medical Imaging Analysis System</Link>
             <div className="navbar-nav me-auto">
               <Link className="nav-link" to="/dashboard">Dashboard</Link>
               <Link className="nav-link" to="/brain-tumor">Brain Tumor</Link>
