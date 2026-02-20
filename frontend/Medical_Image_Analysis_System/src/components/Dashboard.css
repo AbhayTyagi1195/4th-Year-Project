@@ -1,69 +1,56 @@
-.dashboard-page {
-  padding-top: 1.2rem !important;
+.dashboard-page h2{
+  font-size: 2.15rem;
+  font-weight: 800;
+  letter-spacing: .2px;
 }
+.dashboard-page .text-muted{ color:#5f6f89 !important; }
 
-.dashboard-page h2 {
-  font-weight: 700;
-  letter-spacing: 0.2px;
-}
-
-.dashboard-page .text-muted {
-  color: #667085 !important;
-}
-
-.dashboard-page .card {
-  border: 1px solid #e6ecf4 !important;
-  border-radius: 16px;
+.dashboard-page .card{
+  border-radius: 16px !important;
   overflow: hidden;
 }
-
-.dashboard-page .card-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+.dashboard-page .card-header{
   font-weight: 700;
-  letter-spacing: 0.2px;
-  padding: 0.9rem 1rem;
+  letter-spacing: .2px;
+  padding: .9rem 1rem;
+}
+.dashboard-page .bg-primary{
+  background: linear-gradient(135deg,#2563eb,#1d4ed8) !important;
+}
+.dashboard-page .bg-info{
+  background: linear-gradient(135deg,#06b6d4,#0891b2) !important;
+}
+.dashboard-page .bg-danger{
+  background: linear-gradient(135deg,#ef4444,#dc2626) !important;
 }
 
-.dashboard-page .card-body {
-  padding: 1rem 1rem 1.1rem;
-}
-
-.dashboard-page .btn {
+.dashboard-page .btn{
   border-radius: 12px;
   min-height: 42px;
-}
-
-.dashboard-page .btn-outline-danger:hover,
-.dashboard-page .btn-outline-info:hover {
-  box-shadow: 0 8px 16px rgba(2, 6, 23, 0.08);
-}
-
-.dashboard-page input.form-control {
-  border-radius: 12px;
-}
-
-.dashboard-page label.form-label {
   font-weight: 600;
-  margin-bottom: 0.35rem;
-  color: #334155;
+}
+.dashboard-page .btn-outline-danger:hover{
+  background: #ef4444;
+  color:#fff;
+}
+.dashboard-page .btn-outline-info:hover{
+  background: #0ea5e9;
+  color:#fff;
 }
 
-.dashboard-page .alert {
-  border: 1px solid transparent;
+.dashboard-page .form-control{
+  border-radius: 12px;
+  border:1px solid #cfd9e8;
+}
+.dashboard-page .form-control:focus{
+  border-color:#90b7ff;
+  box-shadow:0 0 0 .2rem rgba(37,99,235,.14);
+}
+.dashboard-page .form-label{
+  font-weight: 600;
+  color:#334155;
 }
 
-.dashboard-page .alert-danger {
-  border-color: #fecaca;
-}
-
-.dashboard-page .alert-success {
-  border-color: #bbf7d0;
-}
-
-.dashboard-page .border-danger {
-  border-width: 1.5px !important;
-}
-
-.dashboard-page hr {
-  opacity: 0.12;
+.dashboard-page .alert{
+  border-radius: 12px;
 }
