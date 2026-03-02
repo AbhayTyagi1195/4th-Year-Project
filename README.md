@@ -14,6 +14,8 @@ An AI-powered web application for automated brain tumor detection and classifica
 ## 📋 Table of Contents
 
 - [Overview](#overview)
+- [Latest Implementation Updates (2026)](#-latest-implementation-updates-2026)
+- [New API Route Structure](#-new-api-route-structure)
 - [Features](#features)
 - [Technology Stack](#technology-stack)
 - [System Architecture](#system-architecture)
@@ -49,6 +51,70 @@ The **Medical Image Analysis System** is a comprehensive full-stack application 
 - **🔒 Protected Routes**: Secure API endpoints with token-based access control
 - **💾 History Tracking**: Complete audit trail of all predictions
 - **🎨 Modern UI**: Beautiful, responsive React interface with gradient designs
+
+---
+
+## 🆕 Latest Implementation Updates (2026)
+
+The project now includes an extended implementation beyond the original brain-tumor-only scope, while keeping previous functionality intact.
+
+### ✅ Newly Added Implementation
+
+- **Dual Disease Modules in One System**
+  - Brain Tumor module (MRI)
+  - COVID-19 module (Chest X-ray)
+
+- **Updated Frontend Navigation Flow**
+  - Register/Login → Dashboard → Select Module (Brain Tumor or COVID-19)
+  - Each module has dedicated analysis interface
+  - Back-to-dashboard navigation is available from module pages
+
+- **Disease-wise Upload and Report Handling**
+  - Upload paths separated by disease:
+    - `backend/uploads/brain_tumor`
+    - `backend/uploads/covid_19`
+  - Output/report paths separated by disease:
+    - `backend/output/brain_tumor`
+    - `backend/output/covid_19`
+
+- **PDF Reporting Improvements**
+  - Disease-specific report formatting and content
+  - Single and batch reports for both modules
+  - Stable filename/path handling across brain tumor and COVID flows
+
+- **Backend Route Organization Improvements**
+  - Dedicated blueprints for each disease module
+  - Cleaner prefix-based route handling for better maintainability
+
+---
+
+## 🔀 New API Route Structure
+
+To avoid route ambiguity and keep both modules consistent, disease-prefixed routes are used.
+
+### Auth Routes
+- `/api/auth/register`
+- `/api/auth/login`
+- `/api/auth/verify`
+- `/api/auth/logout`
+
+### Brain Tumor Routes
+- `/api/brain_tumor/predict`
+- `/api/brain_tumor/predict/batch`
+- Additional module routes are defined in `backend/routes/brain_tumor_routes.py`
+
+### COVID-19 Routes
+- `/api/covid_19/predict`
+- `/api/covid_19/predict/batch`
+- Additional module routes are defined in `backend/routes/covid_19_routes.py`
+
+### Report Routes
+- Disease-specific report generation and download are handled via `backend/routes/report_routes.py`
+- Generated reports are saved in disease-wise output directories
+
+### Important Integration Note
+
+If frontend or test pages call old generic paths (for example `/api/predict`), update them to module-prefixed paths (`/api/brain_tumor/...` or `/api/covid_19/...`) to match current backend blueprint registration.
 
 ---
 
