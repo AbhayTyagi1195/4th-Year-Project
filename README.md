@@ -351,8 +351,8 @@ Ensure these model files exist:
 
 ## 👥 Contributors
 
-- **Abhay Tyagi** — Full-stack + AI/ML
-- **Ayush Chauhan** — Backend + Database
+- **Abhay Tyagi** — Backend + Database + Deep Learning(Model Training).
+- **Ayush Chauhan** — Frondend + Authentication.
 
 Institution: ABES Engineering College (Final Year Project)
 
