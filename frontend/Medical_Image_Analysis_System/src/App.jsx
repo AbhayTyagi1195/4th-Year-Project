@@ -87,7 +87,7 @@ function AuthPage({ mode, onLoginSuccess }) {
     <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light px-3">
       <div className="card shadow-sm" style={{ width: '100%', maxWidth: 460 }}>
         <div className="card-body p-4">
-          <h3 className="text-center mb-1">Medical Image Analysis</h3>
+          <h3 className="text-center mb-1 text-nowrap">Medical Image Analysis System</h3>
           <p className="text-center text-muted mb-4">Brain Tumor & Covid-19 Detection</p>
 
           {error && <div className="alert alert-danger py-2">{error}</div>}
@@ -224,7 +224,7 @@ function AppShell() {
       {isAuthenticated && (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
           <div className="container">
-            <Link className="navbar-brand" to="/dashboard">Medical Imaging Analysis System</Link>
+            <Link className="navbar-brand" to="/dashboard">Medical Image Analysis System</Link>
             <div className="navbar-nav me-auto">
               <Link className="nav-link" to="/dashboard">Dashboard</Link>
               <Link className="nav-link" to="/brain-tumor">Brain Tumor</Link>
